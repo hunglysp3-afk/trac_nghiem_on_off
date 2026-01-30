@@ -3,85 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách nội dung</title>
+    <title>Nội dung Vật Lý Khối 12</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 30px; background-color: #f8f9fa; color: #333; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { border-bottom: 2px solid #1a73e8; padding-bottom: 10px; color: #1a73e8; }
-        .item { 
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 15px; border-bottom: 1px solid #eee; transition: 0.2s;
-            text-decoration: none; color: #444;
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background-color: #f4f7f6; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        h2 { color: #d93025; border-bottom: 2px solid #d93025; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        
+        .breadcrumb { margin-bottom: 20px; font-size: 14px; color: #666; }
+        .breadcrumb a { color: #1a73e8; text-decoration: none; }
+
+        .list-group { margin-top: 20px; }
+        .file-item { 
+            display: flex; align-items: center; padding: 15px;
+            border-bottom: 1px solid #eee; text-decoration: none; color: #333;
+            transition: 0.2s; border-radius: 8px;
         }
-        .item:hover { background-color: #f1f7ff; transform: translateX(5px); }
-        .item i { margin-right: 10px; width: 20px; text-align: center; }
-        .file-name { flex-grow: 1; font-weight: 500; }
-        .loading { text-align: center; font-style: italic; color: #888; }
-        .btn-back { display: inline-block; margin-bottom: 20px; color: #666; text-decoration: none; font-size: 14px; }
-        .btn-back:hover { color: #1a73e8; }
+        .file-item:hover { background-color: #f1f3f4; transform: scale(1.01); color: #d93025; }
+        .file-item i { font-size: 20px; margin-right: 15px; width: 25px; text-align: center; }
+        
+        .file-info { flex-grow: 1; }
+        .file-name { font-weight: 600; display: block; }
+        .file-type { font-size: 12px; color: #888; text-transform: uppercase; }
+
+        .loading-spinner { text-align: center; padding: 40px; color: #888; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <a href="../index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại trang chủ</a>
-    <h2 id="folder-name"><i class="fas fa-folder-open"></i> Đang tải dữ liệu...</h2>
-    <div id="file-list" class="loading">Đang quét thư mục trên GitHub...</div>
+    <div class="breadcrumb">
+        <a href="../../../index.html">Trang chủ</a> / 
+        <a href="../index.html">Ôn tập</a> / 
+        <span>Khối 12</span>
+    </div>
+
+    <h2><i class="fas fa-book-open"></i> Tài liệu Ôn tập Khối 12</h2>
+
+    <div id="content-list" class="list-group">
+        <div class="loading-spinner">
+            <i class="fas fa-sync fa-spin"></i> Đang tìm kiếm bài học trong Khối 12...
+        </div>
+    </div>
 </div>
 
 <script>
-    // === CẤU HÌNH THÔNG TIN CỦA BẠN ===
+    // CẤU HÌNH TÀI KHOẢN
     const USERNAME = "hunglysp3-afk"; 
     const REPO = "trac_nghiem_on_off";
     
-    // Tự động xác định thư mục hiện tại dựa trên đường dẫn file
-    // Ví dụ: nếu file ở 'trac-nghiem/index.html', PATH sẽ là 'trac-nghiem'
-    const currentPath = window.location.pathname.split('/').slice(-2, -1)[0] || "";
+    // ĐƯỜNG DẪN CỤ THỂ ĐẾN THƯ MỤC KHỐI 12
+    const FOLDER_PATH = "trac_nghiem_on_off/on_tap/khoi_12"; 
 
-    async function loadFiles() {
-        const url = `https://api.github.com/repos/${USERNAME}/${REPO}/contents/${currentPath}`;
-        const listElement = document.getElementById('file-list');
-        const titleElement = document.getElementById('folder-name');
+    async function fetchContents() {
+        const url = `https://api.github.com/repos/${USERNAME}/${REPO}/contents/${FOLDER_PATH}`;
+        const container = document.getElementById('content-list');
 
         try {
             const response = await fetch(url);
-            const data = await response.json();
+            const items = await response.json();
 
-            if (data.message === "Not Found") throw new Error("Không tìm thấy thư mục");
+            container.innerHTML = ''; // Xóa spinner
 
-            titleElement.innerHTML = `<i class="fas fa-folder-open"></i> Nội dung: ${currentPath.replace(/-/g, ' ')}`;
-            listElement.innerHTML = '';
-            listElement.classList.remove('loading');
+            if (!Array.isArray(items)) throw new Error();
 
-            data.forEach(file => {
-                // Bỏ qua chính file index.html này
-                if (file.name !== 'index.html') {
-                    const isDir = file.type === 'dir';
-                    const icon = isDir ? 'fa-folder' : 'fa-file-code';
-                    const color = isDir ? '#ffca28' : '#1a73e8';
+            items.forEach(item => {
+                // Không hiển thị chính file index.html
+                if (item.name.toLowerCase() !== 'index.html') {
+                    const isFolder = item.type === 'dir';
+                    const icon = isFolder ? 'fa-folder' : 'fa-file-alt';
+                    const iconColor = isFolder ? '#ffca28' : '#4285f4';
 
-                    const item = document.createElement('a');
-                    item.href = isDir ? `${file.name}/index.html` : file.name;
-                    item.className = 'item';
-                    item.innerHTML = `
-                        <span>
-                            <i class="fas ${icon}" style="color: ${color}"></i>
-                            <span class="file-name">${file.name.replace(/-/g, ' ')}</span>
-                        </span>
-                        <i class="fas fa-chevron-right" style="font-size: 12px; color: #ccc"></i>
+                    const anchor = document.createElement('a');
+                    // Nếu là folder thì dẫn vào index của folder đó, nếu là file thì mở file đó
+                    anchor.href = isFolder ? `${item.name}/index.html` : item.name;
+                    anchor.className = 'file-item';
+                    
+                    anchor.innerHTML = `
+                        <i class="fas ${icon}" style="color: ${iconColor}"></i>
+                        <div class="file-info">
+                            <span class="file-name">${item.name.replace(/_/g, ' ').replace(/-/g, ' ')}</span>
+                            <span class="file-type">${isFolder ? 'Thư mục bài học' : 'Tài liệu / Web'}</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: #eee; font-size: 12px;"></i>
                     `;
-                    listElement.appendChild(item);
+                    container.appendChild(anchor);
                 }
             });
 
+            if (container.innerHTML === '') {
+                container.innerHTML = '<p style="text-align:center; color:#999;">Chưa có bài học nào trong thư mục này.</p>';
+            }
+
         } catch (error) {
-            listElement.innerHTML = "❌ Lỗi: Không thể đọc dữ liệu từ GitHub. Kiểm tra lại Username/Repo.";
-            console.error(error);
+            container.innerHTML = '<p style="color:red; text-align:center;">Lỗi: Không thể kết nối với GitHub. Hãy kiểm tra lại tên thư mục trên GitHub.</p>';
         }
     }
 
-    loadFiles();
+    fetchContents();
 </script>
 
 </body>
