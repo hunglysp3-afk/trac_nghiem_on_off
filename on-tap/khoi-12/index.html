@@ -41,67 +41,27 @@
     <h2><i class="fas fa-book-open"></i> Tài liệu Ôn tập Khối 12</h2>
 
     <div id="content-list" class="list-group">
-        <div class="loading-spinner">
-            <i class="fas fa-sync fa-spin"></i> Đang tìm kiếm bài học trong Khối 12...
+    <a href="mol_pttt.html" class="file-item">
+        <i class="fas fa-file-alt" style="color: #4285f4"></i>
+        <div class="file-info">
+            <span class="file-name">Chương 2: Ôn mol PTTT</span>
+            <span class="file-type">chương 2</span>
         </div>
-    </div>
+        <i class="fas fa-chevron-right" style="color: #eee; font-size: 12px;"></i>
+    </a>
+
+    <a href="cac_dinh_luat_chat_khi.html" class="file-item">
+        <i class="fas fa-file-alt" style="color: #4285f4"></i>
+        <div class="file-info">
+            <span class="file-name">Chương 2: Ôn các định luật KHÍ</span>
+            <span class="file-type">chương 2</span>
+        </div>
+        <i class="fas fa-chevron-right" style="color: #eee; font-size: 12px;"></i>
+    </a>
 </div>
 
 <script>
-    // CẤU HÌNH TÀI KHOẢN
-    const USERNAME = "hunglysp3-afk"; 
-    const REPO = "trac_nghiem_on_off";
-    
-    // ĐƯỜNG DẪN CỤ THỂ ĐẾN THƯ MỤC KHỐI 12
-    const FOLDER_PATH = "trac_nghiem_on_off/on-tap/khoi-12"; 
-
-    async function fetchContents() {
-        const url = `https://api.github.com/repos/${USERNAME}/${REPO}/contents/${FOLDER_PATH}`;
-        const container = document.getElementById('content-list');
-
-        try {
-            const response = await fetch(url);
-            const items = await response.json();
-
-            container.innerHTML = ''; // Xóa spinner
-
-            if (!Array.isArray(items)) throw new Error();
-
-            items.forEach(item => {
-                // Không hiển thị chính file index.html
-                if (item.name.toLowerCase() !== 'index.html') {
-                    const isFolder = item.type === 'dir';
-                    const icon = isFolder ? 'fa-folder' : 'fa-file-alt';
-                    const iconColor = isFolder ? '#ffca28' : '#4285f4';
-
-                    const anchor = document.createElement('a');
-                    // Nếu là folder thì dẫn vào index của folder đó, nếu là file thì mở file đó
-                    anchor.href = isFolder ? `${item.name}/index.html` : item.name;
-                    anchor.className = 'file-item';
-                    
-                    anchor.innerHTML = `
-                        <i class="fas ${icon}" style="color: ${iconColor}"></i>
-                        <div class="file-info">
-                            <span class="file-name">${item.name.replace(/_/g, ' ').replace(/-/g, ' ')}</span>
-                            <span class="file-type">${isFolder ? 'Thư mục bài học' : 'Tài liệu / Web'}</span>
-                        </div>
-                        <i class="fas fa-chevron-right" style="color: #eee; font-size: 12px;"></i>
-                    `;
-                    container.appendChild(anchor);
-                }
-            });
-
-            if (container.innerHTML === '') {
-                container.innerHTML = '<p style="text-align:center; color:#999;">Chưa có bài học nào trong thư mục này.</p>';
-            }
-
-        } catch (error) {
-            container.innerHTML = '<p style="color:red; text-align:center;">Lỗi: Không thể kết nối với GitHub. Hãy kiểm tra lại tên thư mục trên GitHub.</p>';
-        }
-    }
-
-    fetchContents();
+    console.log("Trang danh sách khối 12 đã sẵn sàng.");
 </script>
-
 </body>
 </html>
