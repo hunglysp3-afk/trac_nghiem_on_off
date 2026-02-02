@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nội dung Vật Lý Khối 11 - Kiểm Tra</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background-color: #f4f7f6; user-select: none; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        h2 { color: #d93025; border-bottom: 2px solid #d93025; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        
+        .breadcrumb { margin-bottom: 20px; font-size: 14px; color: #666; }
+        .breadcrumb a { color: #1a73e8; text-decoration: none; }
+
+        .list-group { margin-top: 20px; }
+        .file-item { 
+            display: flex; align-items: center; padding: 15px;
+            border-bottom: 1px solid #eee; text-decoration: none; color: #333;
+            transition: 0.2s; border-radius: 8px; position: relative;
+        }
+        
+        /* Trạng thái khi chưa đến giờ hoặc hết giờ */
+        .file-item.locked {
+            background-color: #f8f9fa;
+            opacity: 0.6;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        .file-item:not(.locked):hover { background-color: #f1f3f4; transform: scale(1.01); color: #d93025; }
+        .file-item i.main-icon { font-size: 20px; margin-right: 15px; width: 25px; text-align: center; }
+        
+        .file-info { flex-grow: 1; }
+        .file-name { font-weight: 600; display: block; }
+        .file-type { font-size: 12px; color: #888; }
+        
+        .status-msg { font-size: 11px; font-weight: bold; display: block; margin-top: 4px; }
+        .msg-waiting { color: #f39c12; }
+        .msg-expired { color: #d32f2f; }
+        .msg-open { color: #28a745; }
+
+        /* Thông báo chống F12 */
+        #guard-msg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); color: white; z-index: 9999; justify-content: center; align-items: center; text-align: center; font-size: 20px; }
+    </style>
+</head>
+<body oncontextmenu="return false;"> <div id="guard-msg"><div><i class="fas fa-user-shield fa-3x"></i><br><br>Hành động bị chặn để đảm bảo tính công bằng!</div></div>
+
+<div class="container">
+    <div class="breadcrumb">
+        <a href="../../index.html">Trang chủ</a> / 
+        <a href="../index.html">Kiểm Tra</a> / 
+        <span>Khối 11</span>
+    </div>
+
+    <h2><i class="fas fa-user-edit"></i> Kiểm Tra Thường Xuyên HK2</h2>
+
+    <div id="content-list" class="list-group">
+        <a href="A22_1_15.html" class="file-item" data-time="2026-02-05 09:00">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A22: Số 1 đến 15</span>
+                <span class="file-type">Khu vực bài thi dành cho số thứ tự 1-15</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+<a href="A22_1_15.html" class="file-item" data-time="2026-02-03 09:00">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A22: Số 1 đến 155</span>
+                <span class="file-type">Khu vực bài thi dành cho số thứ tự 1-155</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+
+
+        <a href="A22_16_30.html" class="file-item" data-time="2026-02-05 09:00">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A22: Số 16 đến 30</span>
+                <span class="file-type">Khu vực bài thi dành cho số thứ tự 16-30</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+
+        <a href="A22_31_40.html" class="file-item" data-time="2026-02-05 09:00">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A22: Số 31 đến 40</span>
+                <span class="file-type">Khu vực bài thi dành cho số thứ tự 31-40</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+<!-- //a5-->
+
+        <a href="A5_1_10.html" class="file-item" data-time="2026-02-05 10:30">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A5: Số 1 đến 10</span>
+                <span class="file-type">Lớp 11A5:Khu vực bài thi dành cho số thứ tự 1-10</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+<a href="A5_11_20.html" class="file-item" data-time="2026-02-05 10:30">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A5: Số 11 đến 20</span>
+                <span class="file-type">Lớp 11A5:Khu vực bài thi dành cho số thứ tự 11-20</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+<a href="A5_21_30.html" class="file-item" data-time="2026-02-05 10:30">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A5: Số 21 đến 30</span>
+                <span class="file-type">Lớp 11A5:Khu vực bài thi dành cho số thứ tự 21-30</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+<a href="A5_31_40.html" class="file-item" data-time="2026-02-05 10:30">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A5: Số 31 đến 40</span>
+                <span class="file-type">Lớp 11A5:Khu vực bài thi dành cho số thứ tự 31-40</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+<a href="A5_41_50.html" class="file-item" data-time="2026-02-05 10:30">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A5: Số 41 đến 50</span>
+                <span class="file-type">Lớp 11A5:Khu vực bài thi dành cho số thứ tự 41-50</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+<!-- //a2-->
+        <a href="A2_1_10.html" class="file-item" data-time="2026-02-05 15:30">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A2: Số 1 đến 10</span>
+                <span class="file-type">Lớp 11A2:Khu vực bài thi dành cho số thứ tự 1-10</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+<a href="A2_11_20.html" class="file-item" data-time="2026-02-05 15:30">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A2: Số 11 đến 20</span>
+                <span class="file-type">Lớp 11A2:Khu vực bài thi dành cho số thứ tự 11-20</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+<a href="A2_21_30.html" class="file-item" data-time="2026-02-05 15:30">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A2: Số 21 đến 30</span>
+                <span class="file-type">Lớp 11A2:Khu vực bài thi dành cho số thứ tự 21-30</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+<a href="A2_31_40.html" class="file-item" data-time="2026-02-05 15:30">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A2: Số 31 đến 40</span>
+                <span class="file-type">Lớp 11A2:Khu vực bài thi dành cho số thứ tự 31-40</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+<a href="A2_41_50.html" class="file-item" data-time="2026-02-05 15:30">
+            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
+            <div class="file-info">
+                <span class="file-name">Lớp 11A2: Số 41 đến 50</span>
+                <span class="file-type">Lớp 11A2:Khu vực bài thi dành cho số thứ tự 41-50</span>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
+        </a>
+
+
+
+    </div>
+</div>
+
+<script>
+    // 1. CHỨC NĂNG QUẢN LÝ THỜI GIAN (MỞ 45 PHÚT)
+    function updateExamStatus() {
+        const now = new Date();
+        const durationMinutes = 45; // THỜI GIAN LÀM BÀI: 45 PHÚT
+        const links = document.querySelectorAll('.file-item[data-time]');
+
+        links.forEach(link => {
+            const startTime = new Date(link.getAttribute('data-time'));
+            const endTime = new Date(startTime.getTime() + durationMinutes * 60000);
+            const fileInfo = link.querySelector('.file-info');
+            
+            // Xóa thông báo cũ nếu có
+            const oldMsg = link.querySelector('.status-msg');
+            if (oldMsg) oldMsg.remove();
+
+            const statusMsg = document.createElement('span');
+            statusMsg.className = 'status-msg';
+
+            if (now < startTime) {
+                // CHƯA ĐẾN GIỜ
+                link.classList.add('locked');
+                statusMsg.innerHTML = `<i class="fas fa-clock"></i> Sẽ mở lúc: ${link.getAttribute('data-time')}`;
+                statusMsg.className += ' msg-waiting';
+                fileInfo.appendChild(statusMsg);
+            } 
+            else if (now > endTime) {
+                // ĐÃ HẾT GIỜ (QUÁ 45 PHÚT)
+                link.classList.add('locked');
+                statusMsg.innerHTML = `<i class="fas fa-times-circle"></i> Đã hết thời gian làm bài (Khóa lúc ${endTime.getHours()}:${endTime.getMinutes().toString().padStart(2, '0')})`;
+                statusMsg.className += ' msg-expired';
+                fileInfo.appendChild(statusMsg);
+                link.querySelector('.main-icon').style.color = '#ccc';
+            } 
+            else {
+                // ĐANG TRONG GIỜ LÀM BÀI
+                link.classList.remove('locked');
+                statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Đang mở - Kết thúc lúc: ${endTime.getHours()}:${endTime.getMinutes().toString().padStart(2, '0')}`;
+                statusMsg.className += ' msg-open';
+                fileInfo.appendChild(statusMsg);
+                link.querySelector('.arrow-icon').style.color = '#28a745';
+            }
+        });
+    }
+
+    // 2. CHỨC NĂNG BẢO VỆ (CHỐNG F12, CTRL+U, CHUỘT PHẢI)
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123 || (e.ctrlKey && (e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) || (e.ctrlKey && e.keyCode == 85)) {
+            document.getElementById('guard-msg').style.display = 'flex';
+            setTimeout(() => { document.getElementById('guard-msg').style.display = 'none'; }, 2000);
+            return false;
+        }
+    };
+
+    // Khởi chạy
+    updateExamStatus();
+    setInterval(updateExamStatus, 10000); // Cập nhật mỗi 10 giây
+</script>
+
+</body>
+</html>
