@@ -1,0 +1,876 @@
+<html lang="vi"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hệ Thống Khảo Thí Pro 2026 - Master Version</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']], processEscapes: true },
+            options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+        };
+    </script>
+    <script async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root { --primary: #1e40af; --success: #16a34a; --danger: #dc2626; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: #1e293b; line-height: 1.5; margin: 0; padding: 10px; }
+        .container { max-width: 850px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: 95vh; }
+        .section { background: #fff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 10px 0; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
+        .btn { padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; width: 100%; transition: 0.2s; margin-top: 10px; }
+        .btn-p { background: var(--primary); color: white; }
+        .btn-s { background: var(--success); color: white; }
+        
+        /* Cấu trúc câu hỏi và đáp án */
+        .q-card { border: 1px solid #e2e8f0; padding: 15px; margin-bottom: 15px; border-radius: 10px; position: relative; width: 100%; box-sizing: border-box; }
+        .opt-list { margin-top: 10px; padding-left: 0; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .opt-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid #f1f5f9; border-radius: 6px; cursor: pointer; transition: 0.2s; max-width: 95%; }
+        .opt-item:hover { background: #f8fafc; }
+        .opt-item input { width: auto; margin-top: 4px; flex-shrink: 0; }
+        .opt-text { word-break: break-word; flex-grow: 1; }
+
+        .tf-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f5f9; gap: 10px; }
+        .tf-btns { display: flex; gap: 5px; flex-shrink: 0; }
+        .tf-btn { width: 45px; height: 35px; border: 1px solid #cbd5e1; border-radius: 4px; background: white; cursor: pointer; font-size: 14px; font-weight: bold; }
+        .sel-true { background: var(--success) !important; color: white; border-color: var(--success); }
+        .sel-false { background: var(--danger) !important; color: white; border-color: var(--danger); }
+        
+        .short-ans-box { border: 2px solid var(--primary); padding: 12px; border-radius: 8px; margin-top: 10px; }
+        .note-short { font-size: 13px; color: var(--danger); font-style: italic; margin-top: 8px; display: block; font-weight: 500; }
+        
+        #timer { position: fixed; top: 10px; right: 10px; background: var(--danger); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .is-correct { background: #dcfce7 !important; border-color: #22c55e !important; }
+        .is-wrong { background: #fee2e2 !important; border-color: #ef4444 !important; }
+        .hidden { display: none !important; }
+
+        /* UI Ma trận và Badge */
+        .matrix-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 15px 0; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
+        .matrix-table th { background: #f8fafc; color: #475569; font-weight: 700; padding: 12px; font-size: 15px; border-bottom: 2px solid #e2e8f0; }
+        .matrix-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; text-align: center; }
+        .matrix-input { width: 100%; padding: 8px; font-size: 16px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 8px; transition: all 0.3s; }
+        .has-questions { background-color: #f0fdf4 !important; border-color: #22c55e !important; color: #15803d !important; }
+        .count-label { display: block; margin-top: 4px; font-size: 13px; color: #64748b; }
+        
+        .total-badge { display: block; margin-top: 8px; font-size: 16px; color: #1e40af; font-weight: 900; background: #eff6ff; padding: 8px; border-radius: 8px; text-align: center; border: 2px solid #1e40af; box-shadow: 0 2px 4px rgba(30,64,175,0.1); }
+
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; table-layout: fixed; }
+        th, td { border: 1px solid #cbd5e1; padding: 8px; text-align: center; word-wrap: break-word; }
+    </style>
+<style type="text/css">.CtxtMenu_InfoClose {  top:.2em; right:.2em;}
+.CtxtMenu_InfoContent {  overflow:auto; text-align:left; font-size:80%;  padding:.4em .6em; border:1px inset; margin:1em 0px;  max-height:20em; max-width:30em; background-color:#EEEEEE;  white-space:normal;}
+.CtxtMenu_Info.CtxtMenu_MousePost {outline:none;}
+.CtxtMenu_Info {  position:fixed; left:50%; width:auto; text-align:center;  border:3px outset; padding:1em 2em; background-color:#DDDDDD;  color:black;  cursor:default; font-family:message-box; font-size:120%;  font-style:normal; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 15px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius:15px;               /* Safari and Chrome */  -moz-border-radius:15px;                  /* Firefox */  -khtml-border-radius:15px;                /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */  filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color="gray", Positive="true"); /* IE */}
+</style><style type="text/css">.CtxtMenu_MenuClose {  position:absolute;  cursor:pointer;  display:inline-block;  border:2px solid #AAA;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  font-family: "Courier New", Courier;  font-size:24px;  color:#F0F0F0}
+.CtxtMenu_MenuClose span {  display:block; background-color:#AAA; border:1.5px solid;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  line-height:0;  padding:8px 0 6px     /* may need to be browser-specific */}
+.CtxtMenu_MenuClose:hover {  color:white!important;  border:2px solid #CCC!important}
+.CtxtMenu_MenuClose:hover span {  background-color:#CCC!important}
+.CtxtMenu_MenuClose:hover:focus {  outline:none}
+</style><style type="text/css">.CtxtMenu_Menu {  position:absolute;  background-color:white;  color:black;  width:auto; padding:5px 0px;  border:1px solid #CCCCCC; margin:0; cursor:default;  font: menu; text-align:left; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 5px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius: 5px;             /* Safari and Chrome */  -moz-border-radius: 5px;                /* Firefox */  -khtml-border-radius: 5px;              /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */}
+.CtxtMenu_MenuItem {  padding: 1px 2em;  background:transparent;}
+.CtxtMenu_MenuArrow {  position:absolute; right:.5em; padding-top:.25em; color:#666666;  font-family: null; font-size: .75em}
+.CtxtMenu_MenuActive .CtxtMenu_MenuArrow {color:white}
+.CtxtMenu_MenuArrow.CtxtMenu_RTL {left:.5em; right:auto}
+.CtxtMenu_MenuCheck {  position:absolute; left:.7em;  font-family: null}
+.CtxtMenu_MenuCheck.CtxtMenu_RTL { right:.7em; left:auto }
+.CtxtMenu_MenuRadioCheck {  position:absolute; left: .7em;}
+.CtxtMenu_MenuRadioCheck.CtxtMenu_RTL {  right: .7em; left:auto}
+.CtxtMenu_MenuInputBox {  padding-left: 1em; right:.5em; color:#666666;  font-family: null;}
+.CtxtMenu_MenuInputBox.CtxtMenu_RTL {  left: .1em;}
+.CtxtMenu_MenuComboBox {  left:.1em; padding-bottom:.5em;}
+.CtxtMenu_MenuSlider {  left: .1em;}
+.CtxtMenu_SliderValue {  position:absolute; right:.1em; padding-top:.25em; color:#333333;  font-size: .75em}
+.CtxtMenu_SliderBar {  outline: none; background: #d3d3d3}
+.CtxtMenu_MenuLabel {  padding: 1px 2em 3px 1.33em;  font-style:italic}
+.CtxtMenu_MenuRule {  border-top: 1px solid #DDDDDD;  margin: 4px 3px;}
+.CtxtMenu_MenuDisabled {  color:GrayText}
+.CtxtMenu_MenuActive {  background-color: #606872;  color: white;}
+.CtxtMenu_MenuDisabled:focus {  background-color: #E8E8E8}
+.CtxtMenu_MenuLabel:focus {  background-color: #E8E8E8}
+.CtxtMenu_ContextMenu:focus {  outline:none}
+.CtxtMenu_ContextMenu .CtxtMenu_MenuItem:focus {  outline:none}
+.CtxtMenu_SelectionMenu {  position:relative; float:left;  border-bottom: none; -webkit-box-shadow:none; -webkit-border-radius:0px; }
+.CtxtMenu_SelectionItem {  padding-right: 1em;}
+.CtxtMenu_Selection {  right: 40%; width:50%; }
+.CtxtMenu_SelectionBox {  padding: 0em; max-height:20em; max-width: none;  background-color:#FFFFFF;}
+.CtxtMenu_SelectionDivider {  clear: both; border-top: 2px solid #000000;}
+.CtxtMenu_Menu .CtxtMenu_MenuClose {  top:-10px; left:-10px}
+</style><style id="MJX-CHTML-styles">
+mjx-container[jax="CHTML"] {
+  line-height: 0;
+}
+
+mjx-container [space="1"] {
+  margin-left: .111em;
+}
+
+mjx-container [space="2"] {
+  margin-left: .167em;
+}
+
+mjx-container [space="3"] {
+  margin-left: .222em;
+}
+
+mjx-container [space="4"] {
+  margin-left: .278em;
+}
+
+mjx-container [space="5"] {
+  margin-left: .333em;
+}
+
+mjx-container [rspace="1"] {
+  margin-right: .111em;
+}
+
+mjx-container [rspace="2"] {
+  margin-right: .167em;
+}
+
+mjx-container [rspace="3"] {
+  margin-right: .222em;
+}
+
+mjx-container [rspace="4"] {
+  margin-right: .278em;
+}
+
+mjx-container [rspace="5"] {
+  margin-right: .333em;
+}
+
+mjx-container [size="s"] {
+  font-size: 70.7%;
+}
+
+mjx-container [size="ss"] {
+  font-size: 50%;
+}
+
+mjx-container [size="Tn"] {
+  font-size: 60%;
+}
+
+mjx-container [size="sm"] {
+  font-size: 85%;
+}
+
+mjx-container [size="lg"] {
+  font-size: 120%;
+}
+
+mjx-container [size="Lg"] {
+  font-size: 144%;
+}
+
+mjx-container [size="LG"] {
+  font-size: 173%;
+}
+
+mjx-container [size="hg"] {
+  font-size: 207%;
+}
+
+mjx-container [size="HG"] {
+  font-size: 249%;
+}
+
+mjx-container [width="full"] {
+  width: 100%;
+}
+
+mjx-box {
+  display: inline-block;
+}
+
+mjx-block {
+  display: block;
+}
+
+mjx-itable {
+  display: inline-table;
+}
+
+mjx-row {
+  display: table-row;
+}
+
+mjx-row > * {
+  display: table-cell;
+}
+
+mjx-mtext {
+  display: inline-block;
+}
+
+mjx-mstyle {
+  display: inline-block;
+}
+
+mjx-merror {
+  display: inline-block;
+  color: red;
+  background-color: yellow;
+}
+
+mjx-mphantom {
+  visibility: hidden;
+}
+
+_::-webkit-full-page-media, _:future, :root mjx-container {
+  will-change: opacity;
+}
+
+mjx-assistive-mml {
+  position: absolute !important;
+  top: 0px;
+  left: 0px;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 1px 0px 0px 0px !important;
+  border: 0px !important;
+  display: block !important;
+  width: auto !important;
+  overflow: hidden !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+mjx-assistive-mml[display="block"] {
+  width: 100% !important;
+}
+
+mjx-c::before {
+  display: block;
+  width: 0;
+}
+
+.MJX-TEX {
+  font-family: MJXZERO, MJXTEX;
+}
+
+.TEX-B {
+  font-family: MJXZERO, MJXTEX-B;
+}
+
+.TEX-I {
+  font-family: MJXZERO, MJXTEX-I;
+}
+
+.TEX-MI {
+  font-family: MJXZERO, MJXTEX-MI;
+}
+
+.TEX-BI {
+  font-family: MJXZERO, MJXTEX-BI;
+}
+
+.TEX-S1 {
+  font-family: MJXZERO, MJXTEX-S1;
+}
+
+.TEX-S2 {
+  font-family: MJXZERO, MJXTEX-S2;
+}
+
+.TEX-S3 {
+  font-family: MJXZERO, MJXTEX-S3;
+}
+
+.TEX-S4 {
+  font-family: MJXZERO, MJXTEX-S4;
+}
+
+.TEX-A {
+  font-family: MJXZERO, MJXTEX-A;
+}
+
+.TEX-C {
+  font-family: MJXZERO, MJXTEX-C;
+}
+
+.TEX-CB {
+  font-family: MJXZERO, MJXTEX-CB;
+}
+
+.TEX-FR {
+  font-family: MJXZERO, MJXTEX-FR;
+}
+
+.TEX-FRB {
+  font-family: MJXZERO, MJXTEX-FRB;
+}
+
+.TEX-SS {
+  font-family: MJXZERO, MJXTEX-SS;
+}
+
+.TEX-SSB {
+  font-family: MJXZERO, MJXTEX-SSB;
+}
+
+.TEX-SSI {
+  font-family: MJXZERO, MJXTEX-SSI;
+}
+
+.TEX-SC {
+  font-family: MJXZERO, MJXTEX-SC;
+}
+
+.TEX-T {
+  font-family: MJXZERO, MJXTEX-T;
+}
+
+.TEX-V {
+  font-family: MJXZERO, MJXTEX-V;
+}
+
+.TEX-VB {
+  font-family: MJXZERO, MJXTEX-VB;
+}
+
+mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
+  font-family: MJXZERO, MJXTEX-S1, MJXTEX-S4, MJXTEX, MJXTEX-A ! important;
+}
+
+@font-face /* 0 */ {
+  font-family: MJXZERO;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff") format("woff");
+}
+
+@font-face /* 1 */ {
+  font-family: MJXTEX;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff") format("woff");
+}
+
+@font-face /* 2 */ {
+  font-family: MJXTEX-B;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Bold.woff") format("woff");
+}
+
+@font-face /* 3 */ {
+  font-family: MJXTEX-I;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff") format("woff");
+}
+
+@font-face /* 4 */ {
+  font-family: MJXTEX-MI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Italic.woff") format("woff");
+}
+
+@font-face /* 5 */ {
+  font-family: MJXTEX-BI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-BoldItalic.woff") format("woff");
+}
+
+@font-face /* 6 */ {
+  font-family: MJXTEX-S1;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff") format("woff");
+}
+
+@font-face /* 7 */ {
+  font-family: MJXTEX-S2;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff") format("woff");
+}
+
+@font-face /* 8 */ {
+  font-family: MJXTEX-S3;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff") format("woff");
+}
+
+@font-face /* 9 */ {
+  font-family: MJXTEX-S4;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff") format("woff");
+}
+
+@font-face /* 10 */ {
+  font-family: MJXTEX-A;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff") format("woff");
+}
+
+@font-face /* 11 */ {
+  font-family: MJXTEX-C;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff") format("woff");
+}
+
+@font-face /* 12 */ {
+  font-family: MJXTEX-CB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Bold.woff") format("woff");
+}
+
+@font-face /* 13 */ {
+  font-family: MJXTEX-FR;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Fraktur-Regular.woff") format("woff");
+}
+
+@font-face /* 14 */ {
+  font-family: MJXTEX-FRB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Fraktur-Bold.woff") format("woff");
+}
+
+@font-face /* 15 */ {
+  font-family: MJXTEX-SS;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Regular.woff") format("woff");
+}
+
+@font-face /* 16 */ {
+  font-family: MJXTEX-SSB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Bold.woff") format("woff");
+}
+
+@font-face /* 17 */ {
+  font-family: MJXTEX-SSI;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_SansSerif-Italic.woff") format("woff");
+}
+
+@font-face /* 18 */ {
+  font-family: MJXTEX-SC;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Script-Regular.woff") format("woff");
+}
+
+@font-face /* 19 */ {
+  font-family: MJXTEX-T;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Typewriter-Regular.woff") format("woff");
+}
+
+@font-face /* 20 */ {
+  font-family: MJXTEX-V;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Vector-Regular.woff") format("woff");
+}
+
+@font-face /* 21 */ {
+  font-family: MJXTEX-VB;
+  src: url("https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Vector-Bold.woff") format("woff");
+}
+</style></head>
+<body>
+
+<div class="container">
+    <div id="setup-section">
+        <h2 style="text-align:center; color: var(--primary);">🛠 QUẢN TRỊ ĐỀ THI PRO</h2>
+        <div class="section">
+            <label>1. Nạp ngân hàng (Docx/Html)</label>
+            <input type="file" id="file-input" accept=".docx,.html">
+            <div id="bank-info" class="" style="margin-top:10px; padding:10px; border-radius:8px;">✅ Đã nhận: 19 câu hỏi.</div>
+        </div>
+        <div id="config-area" class="">
+            <div class="section">
+                <label>2. Ma trận câu hỏi (Mức độ)</label>
+                <table class="matrix-table">
+                    <thead><tr><th>Loại</th><th>Biết</th><th>Hiểu</th><th>VD</th><th>VDC</th></tr></thead>
+                    <tbody id="matrix-body">
+                        <tr>
+                            <td style="text-align:left"><b>MCQ</b></td>
+                            <td><input type="number" id="m-mcq-biet" class="matrix-input has-questions" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-mcq-biet">Có: <b>9</b></small></td>
+                            <td><input type="number" id="m-mcq-hieu" class="matrix-input has-questions" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-mcq-hieu">Có: <b>1</b></small></td>
+                            <td><input type="number" id="m-mcq-vd" class="matrix-input has-questions" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-mcq-vd">Có: <b>1</b></small></td>
+                            <td><input type="number" id="m-mcq-vdc" class="matrix-input" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-mcq-vdc">Có: <b>0</b></small></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left"><b>Đúng/Sai</b></td>
+                            <td><input type="number" id="m-tf-biet" class="matrix-input" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-tf-biet">Có: <b>0</b></small></td>
+                            <td><input type="number" id="m-tf-hieu" class="matrix-input has-questions" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-tf-hieu">Có: <b>1</b></small></td>
+                            <td><input type="number" id="m-tf-vd" class="matrix-input has-questions" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-tf-vd">Có: <b>3</b></small></td>
+                            <td><input type="number" id="m-tf-vdc" class="matrix-input" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-tf-vdc">Có: <b>0</b></small></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left"><b>TL Ngắn</b></td>
+                            <td><input type="number" id="m-short-biet" class="matrix-input" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-short-biet">Có: <b>0</b></small></td>
+                            <td><input type="number" id="m-short-hieu" class="matrix-input" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-short-hieu">Có: <b>0</b></small></td>
+                            <td><input type="number" id="m-short-vd" class="matrix-input has-questions" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-short-vd">Có: <b>4</b></small></td>
+                            <td><input type="number" id="m-short-vdc" class="matrix-input" value="0" min="0" oninput="autoUpdateTotals()"><small class="count-label" id="count-short-vdc">Có: <b>0</b></small></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn-p" onclick="fillAllQuestions()">⚡ Lấy toàn bộ câu hỏi hiện có</button>
+            </div>
+            
+            <div class="section">
+                <label>3. Trọng số &amp; Hệ thống lưu trữ</label>
+                <div class="grid">
+                    <div><label>Tổng MCQ (a)</label><input type="number" id="w-mcq" value="4" readonly=""><span id="total-selected-mcq" class="total-badge">Chọn: 9 câu</span></div>
+                    <div><label>Tổng TL Ngắn (b)</label><input type="number" id="w-short" value="3" step="0.1"><span id="total-selected-short" class="total-badge">Chọn: 2 câu</span></div>
+                    <div><label>Tổng Đúng/Sai (c)</label><input type="number" id="w-tf" value="3" step="0.1"><span id="total-selected-tf" class="total-badge">Chọn: 3 câu</span></div>
+                </div>
+                <label style="margin-top:10px; display:block">Google Sheet Web App URL:</label>
+                <input type="text" id="sheet-url" placeholder="https://script.google.com/macros/s/.../exec">
+            </div>
+
+            <div class="section">
+                <label>4. Cấu hình &amp; Telegram</label>
+                <div class="grid">
+                    <div><label>Mật khẩu đề</label><input type="text" id="set-pass" placeholder="Pass..."></div>
+                    <div><label>Thời gian (phút)</label><input type="number" id="set-time" value="45"></div>
+                    <div><label>Chế độ</label><select id="set-mode"><option value="test">Kiểm tra</option><option value="practice">Luyện tập</option></select></div>
+                </div>
+                <div class="grid">
+                    <div><label>Bot Token</label><input type="text" id="tele-token"></div>
+                    <div><label>Chat ID</label><input type="text" id="tele-chatid"></div>
+                </div>
+            </div>
+            <button class="btn btn-s" onclick="exportPackagedFile()">ĐÓNG GÓI ĐỀ THI (.HTML)</button>
+        </div>
+    </div>
+
+    <div id="login-section" class="hidden">
+        <h2 id="display-mode-name" style="text-align:center; color: var(--primary);"></h2>
+        <div class="section">
+            <label>Họ và tên (có dấu):</label>
+            <input type="text" id="stu-name" placeholder="Nguyễn Văn A">
+            <div class="grid">
+                <div><label>Số thứ tự:</label><input type="number" id="stu-stt" placeholder="STT"></div>
+                <div><label>Lớp:</label><input type="text" id="stu-class" placeholder="12A1"></div>
+            </div>
+            <label style="margin-top:10px">Mật khẩu đề:</label>
+            <input type="password" id="stu-pass">
+            <div id="practice-config" class="hidden">
+                <label>Số câu muốn luyện tập:</label><input type="number" id="practice-qty">
+            </div>
+            <button class="btn btn-p" onclick="validateStart()">VÀO LÀM BÀI</button>
+        </div>
+    </div>
+
+    <div id="quiz-section" class="hidden">
+        <div id="timer">00:00</div>
+        <div id="quiz-content"></div>
+        <button class="btn btn-s" onclick="gradeQuiz()">NỘP BÀI CHẤM ĐIỂM</button>
+    </div>
+
+    <div id="result-section" class="hidden">
+        <div id="capture-area" style="background:white; padding:15px; border:2px solid #1e40af; border-radius:10px;">
+            <h3 style="text-align:center; color:var(--primary); margin:0;">PHIẾU ĐIỂM HỆ THỐNG</h3>
+            <p id="res-info" style="text-align:center; font-size:14px"></p>
+            <h1 id="res-score" style="text-align:center; font-size:45px; color:var(--danger); margin:10px 0;">0</h1>
+            <p style="font-weight: bold;">📊 Tóm tắt kết quả:</p>
+            <table><tbody id="summary-body"></tbody></table>
+            <div id="res-table-box"></div>
+            <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 5px; font-size: 10px; display: flex; justify-content: space-between;">
+                <span id="res-timestamp"></span>
+                <span id="res-security-code"></span>
+            </div>
+        </div>
+        <button class="btn btn-p" onclick="downloadResult()">TẢI ẢNH KẾT QUẢ TOÀN BỘ</button>
+        <div id="review-content" style="margin-top:20px"></div>
+    </div>
+</div>
+
+<script>
+    const EMBEDDED_DATA = "eyJjb25maWciOnsicGFzcyI6IkE1dGltIiwidGltZSI6MzAsIm1vZGUiOiJ0ZXN0IiwidGVsZVRva2VuIjoiODIyMjk2MjIwNDpBQUdDVmVDcV9raF94TWxZaVpjSjJmX3VOYzRMYjNTa2ZBcyIsInRlbGVDaGF0SUQiOiI4ODYyNDc5NDUiLCJzaGVldFVybCI6IiIsIndlaWdodHMiOnsiYSI6NiwiYiI6MSwiYyI6M30sImZpbGVJRCI6IjA4ZWRhNDkzLTc4YWQtNDFmOS05Y2ZkLTQzZTM4M2QzM2Y5YiJ9LCJleGFtIjpbeyJsdmwiOiJiaWV0IiwidHlwZSI6Ik1DUSIsInRpdGxlIjoiKFROKSAoQmnDocK6wr90KTwvc3Ryb25nPiBIYWkgdsOhwrrCrXQgbmjDocK7wo8gbWFuZyDDhMKRacOhwrvCh24gdMODwq1jaCBjw4PCuW5nXG5cbmTDocK6wqV1LCDDhMKRw6HCusK3dCB0cm9uZyBraMODwrRuZyBraMODwq0uIEtoaSBraG/DocK6wqNuZyBjw4PCoWNoIGdpw6HCu8KvYSBjaMODwrpuZyB0w4TCg25nIGzDg8KqbiAzIGzDocK6wqduIHRow4PCrFxuXG5sw6HCu8KxYyB0w4bCsMOGwqFuZyB0w4PCoWMgw4TCkWnDocK7woduIGdpw6HCu8KvYSBoYWkgdsOhwrrCrXQgc8OhwrrCvToiLCJvcHRzIjpbeyJjb250ZW50IjoidMOEwoNuZyBsw4PCqm4gMyBsw6HCusKnbi4iLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoidMOEwoNuZyBsw4PCqm4gOSBsw6HCusKnbi4iLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoiZ2nDocK6wqNtIHh1w6HCu8KRbmcgMyBsw6HCusKnbi4iLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoiZ2nDocK6wqNtIHh1w6HCu8KRbmcgOSBsw6HCusKnbiIsImlzT2siOnRydWV9XSwiY29ycmVjdFNob3J0IjoiIn0seyJsdmwiOiJiaWV0IiwidHlwZSI6Ik1DUSIsInRpdGxlIjoiKFROKSAoQmnDocK6wr90KTwvc3Ryb25nPiBDw4PCtG5nIHRow6HCu8KpYyB0w4PCrW5oIMOEwpHDocK7wpkgbMOhwrvCm24gY8OGwrDDocK7wp1uZyDDhMKRw6HCu8KZXG5cbsOEwpFpw6HCu8KHbiB0csOGwrDDocK7wp1uZyBjw6HCu8KnYSDDhMKRacOhwrvCh24gdMODwq1jaCDDhMKRacOhwrvCg20gUSDDhMKRw6HCusK3dCB0cm9uZyBjaMODwqJuIGtow4PCtG5nIGzDg8KgIiwib3B0cyI6W3siY29udGVudCI6IjxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXChcXG1hdGhiZntFID1cblxua31cXGZyYWN7XFxtYXRoYmZ7UX19e1xcbWF0aGJme3J9fVxcKTwvc3Bhbj4uIiwiaXNPayI6ZmFsc2V9LHsiY29udGVudCI6IjxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXChcXGZyYWN7XFxtYXRoYmZ7RX19e1xcbWF0aGJme2t9fVxcbWF0aGJmez1cblxua31cXGZyYWN7XFxsZWZ0fCBcXG1hdGhiZntRfSBcXHJpZ2h0fH17XFxtYXRoYmZ7cn1ee1xcbWF0aGJmezJ9fX1cXCk8L3NwYW4+LiIsImlzT2siOnRydWV9LHsiY29udGVudCI6IjxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXChcXG1hdGhiZntFID1cblxua31cXGZyYWN7XFxsZWZ0fCBcXG1hdGhiZntRfSBcXHJpZ2h0fH17XFxtYXRoYmZ7cn19XFwpPC9zcGFuPi4iLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoiPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKFxcbWF0aGJme0UgPVxuXG5rfVxcZnJhY3tcXG1hdGhiZntRfX17XFxtYXRoYmZ7cn1ee1xcbWF0aGJmezJ9fX1cXCk8L3NwYW4+LiIsImlzT2siOmZhbHNlfV0sImNvcnJlY3RTaG9ydCI6IiJ9LHsibHZsIjoiYmlldCIsInR5cGUiOiJNQ1EiLCJ0aXRsZSI6IihUTikgKEJpw6HCusK/dCk8L3N0cm9uZz4gQ8OGwrDDocK7wp1uZyDDhMKRw6HCu8KZIMOEwpFpw6HCu8KHbiB0csOGwrDDocK7wp1uZyB0w6HCusKhaSBtw6HCu8KZdCDDhMKRacOhwrvCg21cblxuw4TCkcOhwrrCt2MgdHLDhsKwbmcgY2hvIiwib3B0cyI6W3siY29udGVudCI6InRow6HCu8KDIHTDg8KtY2ggdsODwrluZyBjw4PCsyDDhMKRacOhwrvCh24gdHLDhsKww6HCu8KdbmcgbMODwqAgbMOhwrvCm24gaGF5IG5ow6HCu8KPLiIsImlzT2siOmZhbHNlfSx7ImNvbnRlbnQiOiLDhMKRacOhwrvCh24gdHLDhsKww6HCu8KdbmcgdMOhwrrCoWkgw4TCkWnDocK7woNtIMOEwpHDg8KzIHbDocK7woEgcGjDhsKww4bCoW5nIGRpw6HCu8KHbiBkw6HCu8KxIHRyw6HCu8KvXG5cbm7DhMKDbmcgbMOGwrDDocK7wqNuZy4iLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoidMODwqFjIGTDocK7wqVuZyBsw6HCu8KxYyBjw6HCu8KnYSDDhMKRacOhwrvCh24gdHLDhsKww6HCu8KdbmcgbMODwqpuIMOEwpFpw6HCu8KHbiB0w4PCrWNoIHTDocK6wqFpXG5cbsOEwpFpw6HCu8KDbSDDhMKRw4PCsy4iLCJpc09rIjp0cnVlfSx7ImNvbnRlbnQiOiJ0w6HCu8KRYyDDhMKRw6HCu8KZIGTDocK7wotjaCBjaHV5w6HCu8KDbiDDhMKRacOhwrvCh24gdMODwq1jaCB0w6HCusKhaSDDhMKRacOhwrvCg20gw4TCkcODwrMuIiwiaXNPayI6ZmFsc2V9XSwiY29ycmVjdFNob3J0IjoiIn0seyJsdmwiOiJiaWV0IiwidHlwZSI6Ik1DUSIsInRpdGxlIjoiKFROKSAoQmnDocK6wr90KTwvc3Ryb25nPiBIYWkgcXXDocK6wqMgY8OhwrrCp3Uga2ltIGxvw6HCusKhaSBnacOhwrvCkW5nIG5oYXUsXG5cbmJhbiDDhMKRw6HCusKndSDDhMKRw6HCu8KBdSA8c3Ryb25nPnRydW5nIGhvw4PCoCDDhMKRacOhwrvCh248L3N0cm9uZz4uIEtoaSBjaG8gY2jDg8K6bmcgdGnDocK6wr9wIHjDg8K6YyB2w6HCu8KbaVxuXG5tw6HCu8KZdCB0aGFuaCB0w4PCrWNoIMOEwpFpw6HCu8KHbiDDg8KibSByw6HCu8KTaSB0w4PCoWNoIHJhIHRow4PCrCBoYWkgcXXDocK6wqMgY8OhwrrCp3Ugc8OhwrrCvToiLCJvcHRzIjpbeyJjb250ZW50IjoibHXDg8K0biBow4PCunQgbmhhdSIsImlzT2siOmZhbHNlfSx7ImNvbnRlbnQiOiJsdcODwrRuIMOEwpHDocK6wql5IG5oYXUiLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoibcOhwrvCmXQgaMODwrp0LCBtw6HCu8KZdCDDhMKRw6HCusKpeSIsImlzT2siOmZhbHNlfSx7ImNvbnRlbnQiOiJsdcODwrRuIHRydW5nIGhvw4PCoCDDhMKRacOhwrvCh24iLCJpc09rIjp0cnVlfV0sImNvcnJlY3RTaG9ydCI6IiJ9LHsibHZsIjoiYmlldCIsInR5cGUiOiJNQ1EiLCJ0aXRsZSI6IihUTikgKEJpw6HCusK/dCk8L3N0cm9uZz4gTMOhwrvCsWMgdMOGwrDDhsKhbmcgdMODwqFjIHTDhMKpbmggw4TCkWnDocK7woduIGdpw6HCu8KvYSBoYWlcblxuw4TCkWnDocK7woduIHTDg8KtY2ggw4TCkWnDocK7woNtIDxzdHJvbmc+a2jDg8K0bmc8L3N0cm9uZz4gcGjDocK7wqUgdGh1w6HCu8KZYyB2w4PCoG8gbmjDocK7wq9uZyB5w6HCusK/dSB0w6HCu8KRXG5cbm7Dg8Kgbz8iLCJvcHRzIjpbeyJjb250ZW50IjoiTcODwrRpIHRyw4bCsMOhwrvCnW5nIMOEwpHDocK6wrd0IGhhaSDDhMKRacOhwrvCh24gdMODwq1jaCDDhMKRacOhwrvCg20uIiwiaXNPayI6ZmFsc2V9LHsiY29udGVudCI6IsOEwpBpw6HCu8KHbiB0w4PCrWNoIGPDocK7wqdhIGhhaSDDhMKRacOhwrvCh24gdMODwq1jaCDDhMKRacOhwrvCg20uIiwiaXNPayI6ZmFsc2V9LHsiY29udGVudCI6Iktob8OhwrrCo25nIGPDg8KhY2ggZ2nDocK7wq9hIGhhaSDDhMKRacOhwrvCh24gdMODwq1jaCDDhMKRacOhwrvCg20uIiwiaXNPayI6ZmFsc2V9LHsiY29udGVudCI6IlPDocK7wpEgbMOGwrDDocK7wqNuZyBlbGVjdHJvbiBjw4PCsyB0cm9uZyDDhMKRacOhwrvCh24gdMODwq1jaCDDhMKRacOhwrvCg20uIiwiaXNPayI6dHJ1ZX1dLCJjb3JyZWN0U2hvcnQiOiIifSx7Imx2bCI6ImJpZXQiLCJ0eXBlIjoiTUNRIiwidGl0bGUiOiIoVE4pIChCacOhwrrCv3QpPC9zdHJvbmc+IFbDocK6wq10IEEgbWFuZyDDhMKRacOhwrvCh24gdsOhwrvCm2kgw4TCkWnDocK7woduIHTDg8KtY2ggNFxuXG7DjsK8Qy4gdsOhwrrCrXQgQiBtYW5nIMOEwpFpw6HCu8KHbiB2w6HCu8KbaSDDhMKRacOhwrvCh24gdMODwq1jaCAxMiDDjsK8Qy4gTMOhwrvCsWMgw4TCkWnDocK7woduIGRvIHbDocK6wq10IEEgdMODwqFjIGTDocK7wqVuZyBsw4PCqm5cblxudsOhwrrCrXQgQiBsw4PCoCA8c3BhbiBjbGFzcz1cIm1hdGggaW5saW5lXCI+XFwoe1xcb3ZlcnJpZ2h0YXJyb3d7Rn19X3tBQn1cXCk8L3NwYW4+LFxuXG5sw6HCu8KxYyDDhMKRacOhwrvCh24gZG8gdsOhwrrCrXQgQiB0w4PCoWMgZMOhwrvCpW5nIGzDg8KqbiB2w6HCusKtdCBBIGzDg8KgIDxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXCh7XFxvdmVycmlnaHRhcnJvd3tGfX1fe0JBfVxcKTwvc3Bhbj4uIEJpw6HCu8KDdSB0aMOhwrvCqWMgbsODwqBvXG5cbnNhdSDDhMKRw4PConkgPHN0cm9uZz7DhMKRw4PCum5nPC9zdHJvbmc+PyIsIm9wdHMiOlt7ImNvbnRlbnQiOiI8c3BhbiBjbGFzcz1cIm1hdGggaW5saW5lXCI+XFwoe1xcb3ZlcnJpZ2h0YXJyb3d7Rn19X3tBQn0gPSAtXG5cbjN7XFxvdmVycmlnaHRhcnJvd3tGfX1fe0JBfVxcKTwvc3Bhbj4iLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoiPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKHtcXG92ZXJyaWdodGFycm93e0Z9fV97QUJ9ID0gLVxuXG57XFxvdmVycmlnaHRhcnJvd3tGfX1fe0JBfVxcKTwvc3Bhbj4iLCJpc09rIjp0cnVlfSx7ImNvbnRlbnQiOiI8c3BhbiBjbGFzcz1cIm1hdGggaW5saW5lXCI+XFwoM3tcXG92ZXJyaWdodGFycm93e0Z9fV97QUJ9ID0gLVxuXG57XFxvdmVycmlnaHRhcnJvd3tGfX1fe0JBfVxcKTwvc3Bhbj4iLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoiPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKHtcXG92ZXJyaWdodGFycm93e0Z9fV97QUJ9ID1cblxuM3tcXG92ZXJyaWdodGFycm93e0Z9fV97QkF9XFwpPC9zcGFuPiIsImlzT2siOmZhbHNlfV0sImNvcnJlY3RTaG9ydCI6IiJ9LHsibHZsIjoiYmlldCIsInR5cGUiOiJNQ1EiLCJ0aXRsZSI6IihUTikgKEJpw6HCusK/dCk8L3N0cm9uZz4gTcOhwrvCmXQgcXXDocK6wqMgY8OhwrrCp3Uga2ltIGxvw6HCusKhaSB0w4PCrWNoIMOEwpFpw6HCu8KHblxuXG5kw4bCsMOGwqFuZyDDhMKRw4bCsMOhwrvCo2MgdHJlbyBiw6HCusKxbmcgc8OhwrvCo2kgY2jDocK7wokgY8ODwqFjaCDDhMKRacOhwrvCh24uIMOEwpDDhsKwYSBtw6HCu8KZdCB0aGFuaCBuaMOhwrvCsWEgdMODwq1jaCDDhMKRacOhwrvCh24gw4PCom1cblxubMOhwrrCoWkgZ8OhwrrCp24gcXXDocK6wqMgY8OhwrrCp3UgbmjDhsKwbmcga2jDg8K0bmcgdGnDocK6wr9wIHjDg8K6Yy4gS2hpIMOEwpHDg8KzIHF1w6HCusKjIGPDocK6wqd1IHPDocK6wr06Iiwib3B0cyI6W3siY29udGVudCI6ImLDocK7wosgw4TCkcOhwrrCqXkgcmEgeGEgdGhhbmggbmjDocK7wrFhIiwiaXNPayI6ZmFsc2V9LHsiY29udGVudCI6Imtow4PCtG5nIGNow6HCu8KLdSB0w4PCoWMgZMOhwrvCpW5nIGzDocK7wrFjIiwiaXNPayI6ZmFsc2V9LHsiY29udGVudCI6ImLDocK7wosgaMODwrp0IHbDocK7woEgcGjDg8KtYSB0aGFuaCBuaMOhwrvCsWEiLCJpc09rIjp0cnVlfSx7ImNvbnRlbnQiOiJiw6HCu8KLIG5oacOhwrvChW0gw4TCkWnDocK7woduIMODwqJtIiwiaXNPayI6ZmFsc2V9XSwiY29ycmVjdFNob3J0IjoiIn0seyJsdmwiOiJoaWV1IiwidHlwZSI6Ik1DUSIsInRpdGxlIjoiKFROKSAoSGnDocK7woN1KTwvc3Ryb25nPiBIYWkgcXXDocK6wqMgY8OhwrrCp3Uga2ltIGxvw6HCusKhaSBnacOhwrvCkW5nIG5oYXVcblxubWFuZyDDhMKRacOhwrvCh24gdMODwq1jaCA8c3BhbiBjbGFzcz1cIm1hdGggaW5saW5lXCI+XFwocV97MX1cXCk8L3NwYW4+IHbDg8KgIDxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXChxX3syfVxcKTwvc3Bhbj4gdsOhwrvCm2kgPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKDJcXGxlZnR8IHFfezF9IFxccmlnaHR8ID0gXFxsZWZ0fCBxX3syfVxuXG5cXHJpZ2h0fCxcXCk8L3NwYW4+IMOEwpHDhsKwYSBjaMODwrpuZyBsw6HCusKhaSBnw6HCusKnbiB0aMODwqwgPHN0cm9uZz5jaMODwrpuZyDDhMKRw6HCusKpeSBuaGF1PC9zdHJvbmc+LlxuXG5Ow6HCusK/dSBjaG8gY2jDg8K6bmcgdGnDocK6wr9wIHjDg8K6YyBuaGF1IHLDocK7wpNpIHNhdSDDhMKRw4PCsyB0w4PCoWNoIHJhIHRow4PCrCBtw6HCu8KXaSBxdcOhwrrCoyBjw6HCusKndSBzw6HCusK9IG1hbmdcblxuw4TCkWnDocK7woduIHTDg8KtY2giLCJvcHRzIjpbeyJjb250ZW50IjoiPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKDJxX3sxfVxcKTwvc3Bhbj48c3ViPi48L3N1Yj4iLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoiMC4iLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoiPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKFxcbWF0aGJmezEsNS59cV97MX1cXCk8L3NwYW4+LiIsImlzT2siOnRydWV9LHsiY29udGVudCI6IjxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXChcXGZyYWN7cV97MX19ezJ9XFwpPC9zcGFuPjxzdWI+Ljwvc3ViPiIsImlzT2siOmZhbHNlfV0sImNvcnJlY3RTaG9ydCI6IiJ9LHsibHZsIjoiaGlldSIsInR5cGUiOiJURiIsInRpdGxlIjoiKMOEwpAvUykgKEhpw6HCu8KDdSk8L3N0cm9uZz4gS2hpIHRhIGPDocK7wo0gc8ODwqF0IHRoYW5oIHRow6HCu8KneSB0aW5oXG5cbnbDg8KgbyBtw6HCu8KZdCB0w6HCusKlbSBkw6HCusKhIHRow4PCrCB0aGFuaCB0aMOhwrvCp3kgdGluaCBuaGnDocK7woVtIMOEwpFpw6HCu8KHbiBkw4bCsMOGwqFuZy4gVGhlbyBuaMOhwrvCr25nIGfDg8KsIMOEwpHDg8KjXG5cbsOEwpHDhsKww6HCu8KjYyBow6HCu8KNYywgZW0gaMODwqN5IGNow6HCu8KJIHJhIG5ow6HCu8KvbmcgcGjDg8KhdCBiacOhwrvCg3Ugc2F1IMOEwpHDg8KieSwgcGjDg8KhdCBiacOhwrvCg3UgbsODwqBvIMOEwpHDg8K6bmcsXG5cbnBow4PCoXQgYmnDocK7woN1IG7Dg8KgbyBzYWk/Iiwib3B0cyI6W3siY29udGVudCI6IlNhdSBraGkgY8OhwrvCjSBzw4PCoXQsIHRoYW5oIHRow6HCu8KneSB0aW5oIGPDg8KzIHRow6HCu8KDIGjDg8K6dCBuaMOhwrvCr25nXG5cbnbDocK6wq10IG5ow6HCu8KPIG5ow6HCusK5IG5ow4bCsCBnacOhwrrCpXkgdsOhwrvCpW4gaGF5IGLDocK7wqVpIG3DocK7wotuLiA8c3Ryb25nPjwvc3Ryb25nPiIsImlzT2siOnRydWV9LHsiY29udGVudCI6IktoaSB0aGFuaCB0aMOhwrvCp3kgdGluaCBjw6HCu8KNIHPDg8KhdCB2w6HCu8KbaSBkw6HCusKhLCBjaMOhwrvClyB0acOhwrrCv3AgeMODwrpjXG5cbmPDg8KzIGPDg8KhYyBlbGVjdHJvbiB0w6HCu8KxIGRvIGTDocK7wotjaCBjaHV5w6HCu8KDbiB0w6HCu8KrIGTDocK6wqEgc2FuZyB0aGFuaCB0aMOhwrvCp3kgdGluaCIsImlzT2siOmZhbHNlfSx7ImNvbnRlbnQiOiLDhMKQw4PConkgbMODwqAgaGnDocK7woduIHTDhsKww6HCu8Kjbmcgbmhpw6HCu8KFbSDDhMKRacOhwrvCh24gZG8gdGnDocK6wr9wIHjDg8K6Yy4iLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoiVMOhwrvClW5nIMOEwpFpw6HCu8KHbiB0w4PCrWNoIGPDocK7wqdhIHRoYW5oIHRow6HCu8KneSB0aW5oIHbDg8KgIHTDocK6wqVtIGTDocK6wqEgc2F1XG5cbmtoaSB0acOhwrrCv3AgeMODwrpjIGLDocK6wrFuZyAwIiwiaXNPayI6dHJ1ZX1dLCJjb3JyZWN0U2hvcnQiOiIifSx7Imx2bCI6InZkIiwidHlwZSI6Ik1DUSIsInRpdGxlIjoiKFROKSAoVkQpPC9zdHJvbmc+IEhhaSDDhMKRacOhwrvCh24gdMODwq1jaCDDhMKRacOhwrvCg20gPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKHFfezF9ID0gcV97Mn0gPSAxMF57LSA3fVxcdGV4dHvDosKAwolDfVxcKTwvc3Bhbj4gw4TCkcOGwrDDocK7wqNjXG5cbsOEwpHDocK6wrd0IHTDocK6wqFpIGhhaSDDhMKRacOhwrvCg20gPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKEFcXCk8L3NwYW4+dsODwqAgPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKEJcXCk8L3NwYW4+dHJvbmcgY2jDg8KibiBraMODwrRuZywgY8ODwqFjaCBuaGF1IDxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXCgyMFxcdGV4dHvDosKAwoljbX1cXCk8L3NwYW4+LiDDhMKQacOhwrvCg20gPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKE5cXCk8L3NwYW4+bsOhwrrCsW0gdHLDg8KqbiDDhMKRw4bCsMOhwrvCnW5nIHRow6HCusKzbmcgPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKEFCXFwpPC9zcGFuPiwgY8ODwqFjaCA8c3BhbiBjbGFzcz1cIm1hdGggaW5saW5lXCI+XFwoQVxcKTwvc3Bhbj5tw6HCu8KZdCDDhMKRb8OhwrrCoW4gPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKDEwXFx0ZXh0e8OiwoDCiWNtfVxcKTwvc3Bhbj4gdsODwqAgY8ODwqFjaCA8c3BhbiBjbGFzcz1cIm1hdGggaW5saW5lXCI+XFwoQlxcKTwvc3Bhbj4gbcOhwrvCmXQgw4TCkW/DocK6wqFuIDxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXCgzMFxcdGV4dHvDosKAwoljbX1cXCk8L3NwYW4+ICjDhMKRacOhwrvCg20gPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKEFcXCk8L3NwYW4+bsOhwrrCsW0gZ2nDocK7wq9hIDxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXChOXFwpPC9zcGFuPnbDg8KgIDxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXChCXFwpPC9zcGFuPikuIEjDg8KjeSB4w4PCoWMgw4TCkcOhwrvCi25oIMOEwpHDocK7wpkgbMOhwrvCm24gY8OGwrDDocK7wp1uZyDDhMKRw6HCu8KZIMOEwpFpw6HCu8KHblxuXG50csOGwrDDocK7wp1uZyB0w6HCu8KVbmcgaMOhwrvCo3AgdMOhwrrCoWkgw4TCkWnDocK7woNtIDxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXChOXFwpPC9zcGFuPi4iLCJvcHRzIjpbeyJjb250ZW50IjoiPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKDEsMiBcXHRpbWVzXG5cbjEwXns1fVxcdGV4dHvDosKAwolWL219XFwpPC9zcGFuPiIsImlzT2siOmZhbHNlfSx7ImNvbnRlbnQiOiI8c3BhbiBjbGFzcz1cIm1hdGggaW5saW5lXCI+XFwoMSwwIFxcdGltZXMgMTBeezV9XFx0ZXh0e8OiwoDCiVYvbX1cXCk8L3NwYW4+IiwiaXNPayI6dHJ1ZX0seyJjb250ZW50IjoiPHNwYW4gY2xhc3M9XCJtYXRoIGlubGluZVwiPlxcKDAsOSBcXHRpbWVzXG5cbjEwXns1fVxcdGV4dHvDosKAwolWL219XFwpPC9zcGFuPiIsImlzT2siOmZhbHNlfSx7ImNvbnRlbnQiOiI8c3BhbiBjbGFzcz1cIm1hdGggaW5saW5lXCI+XFwoOCwwIFxcdGltZXNcblxuMTBeezR9XFx0ZXh0e8OiwoDCiVYvbX1cXCk8L3NwYW4+IiwiaXNPayI6ZmFsc2V9XSwiY29ycmVjdFNob3J0IjoiIn0seyJsdmwiOiJ2ZCIsInR5cGUiOiJURiIsInRpdGxlIjoiKMOEwpAvUykgKFZEKTwvc3Ryb25nPiBIYWkgcXXDocK6wqMgY8OhwrrCp3UgQSwgQiBjw4PCsyBrw4PCrWNoIHRow4bCsMOhwrvCm2MgbmjDocK7wo9cblxuw4TCkcOGwrDDocK7wqNjIMOEwpHDocK6wrd0IGPDg8KhY2ggbmhhdSBtw6HCu8KZdCBraG/DocK6wqNuZyByIHRyb25nIGNow4PCom4ga2jDg8K0bmcuIEJpw6HCusK/dCBxdcOhwrrCoyBjw6HCusKndSBBIGPDg8KzIMOEwpFpw6HCu8KHblxuXG50w4PCrWNoIMOiwoDCkzMuMTA8c3VwPi03PC9zdXA+QyB2w4PCoCBxdcOhwrrCoyBjw6HCusKndSBCIGPDg8KzIMOEwpFpw6HCu8KHbiB0w4PCrWNoIDIsMi4xMDxzdXA+LTc8L3N1cD5DLlxuXG5DaG8gaGFpIHF1w6HCusKjIGPDocK6wqd1IHRpw6HCusK/cCB4w4PCumMgdsOhwrvCm2kgbmhhdSwgc2F1IMOEwpHDg8KzIMOEwpHDocK6wrd0IGPDg8KhY2ggbmhhdSBtw6HCu8KZdCBraG/DocK6wqNuZyBuaMOGwrBcblxubMODwrpjIMOEwpHDocK6wqd1IHRyb25nIG3Dg8K0aSB0csOGwrDDocK7wp1uZyBjw4PCsyDDhMKRacOhwrvCh24gbcODwrRpIGzDg8KgIDQuIiwib3B0cyI6W3siY29udGVudCI6IkjDocK6wrFuZyBzw6HCu8KRIMOEwpFpw6HCu8KHbiBtw4PCtGkgY8OhwrvCp2EgY2jDg8KibiBraMODwrRuZyBiw6HCusKxbmcgMS4iLCJpc09rIjp0cnVlfSx7ImNvbnRlbnQiOiJTYXUga2hpIHRpw6HCusK/cCB4w4PCumMsIGhhaSBxdcOhwrrCoyBjw6HCusKndSDDhMKRw6HCu8KBdSBtYW5nIMOEwpFpw6HCu8KHbiB0w4PCrWNoXG5cbjxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXCgtIDAsNS4xMF57LSA3fVxcdGV4dHsgQy59XFwpPC9zcGFuPiIsImlzT2siOmZhbHNlfSx7ImNvbnRlbnQiOiJUcsOGwrDDocK7wptjIGtoaSB0acOhwrrCv3AgeMODwrpjIDIgcXXDocK6wqMgY8OhwrrCp3Ugc8OhwrrCvSBow4PCunQgbmhhdS4iLCJpc09rIjp0cnVlfSx7ImNvbnRlbnQiOiJTYXUga2hpIHRpw6HCusK/cCB4w4PCumMsIGzDocK7wrFjIHTDhsKww4bCoW5nIHTDg8KhYyBjw6HCu8KnYSBoYWkgcXXDocK6wqMgY8OhwrrCp3VcblxuZ2nDocK6wqNtIDE2NSBsw6HCusKnbi4iLCJpc09rIjp0cnVlfV0sImNvcnJlY3RTaG9ydCI6IiJ9LHsibHZsIjoidmQiLCJ0eXBlIjoiVEYiLCJ0aXRsZSI6IijDhMKQL1MpIChWRCk8L3N0cm9uZz4gTcOhwrvCmXQgdGhhbmggdGjDg8KpcCBtYW5nIMOEwpFpw6HCu8KHbiB0w4PCrWNoXG5cbjIuMTA8c3VwPi02PC9zdXA+IChDKSA8c3Ryb25nPi48L3N0cm9uZz4gc2F1IMOEwpHDg8KzIG7Dg8KzIGzDocK6wqFpIMOEwpHDhsKww6HCu8KjYyBuaGnDocK7woVtIMOEwpFpw6HCu8KHblxuXG7DhMKRw6HCu8KDIGPDg8KzIMOEwpFpw6HCu8KHbiB0w4PCrWNoIC01LDUuMTA8c3VwPi02PC9zdXA+IChDKSA8c3Ryb25nPi48L3N0cm9uZz4gVHJvbmcgcXXDg8KhXG5cbnRyw4PCrG5oIG5oacOhwrvChW0gw4TCkWnDocK7woduIGzDocK6wqduIHNhdSwgdGhhbmggdGjDg8KpcCDDhMKRw4PCoyBNw6HCusKkVCBoYXkgTkjDocK6wqxOIG3DocK7wpl0IGzDhsKww6HCu8Kjbmcgw4TCkWnDocK7woduIHTDg8KtY2hcblxubMODwqAgYmFvIG5oacODwqp1IDxzcGFuIGNsYXNzPVwibWF0aCBpbmxpbmVcIj5cXChcXG11IEM/XFwpPC9zcGFuPiBUw4bCr8OGwqBORyDDhMKQw4bCr8OGwqBORyBWw6HCu8KaSVxuXG5CQU8gTkhJw4PCilUgZT8iLCJvcHRzIjpbeyJjb250ZW50IjoiQmFuIMOEwpHDocK6wqd1IHRoYW5oIHRow4PCqXAgZMOGwrAgZWxlY3Ryb24uIiwiaXNPayI6ZmFsc2V9LHsiY29udGVudCI6IlNhdSBraGkgbmhpw6HCu8KFbSDDhMKRacOhwrvCh24sIHRoYW5oIHRow4PCqXAgdGhpw6HCusK/dVxuXG5lbGVjdHJvbi4iLCJpc09rIjpmYWxzZX0seyJjb250ZW50IjoiVHJvbmcgcXXDg8KhIHRyw4PCrG5oIG5oacOhwrvChW0gw4TCkWnDocK7woduLCB0aGFuaCB0aMODwqlwIMOEwpHDg8KjIG5ow6HCusKtblxuXG50aMODwqptIGVsZWN0cm9uLiIsImlzT2siOnRydWV9LHsiY29udGVudCI6IlPDocK7wpEgZWxlY3Ryb24gbcODwqAgdGhhbmggdGjDg8KpcCBuaMOhwrrCrW4gdGjDg8KqbSBsw4PCoCA8c3BhbiBjbGFzcz1cIm1hdGggaW5saW5lXCI+XFwoNCw3IFxcdGltZXMgMTBeezEzfVxcKTwvc3Bhbj5lbGVjdHJvbi4gKGvDocK6wr90IHF1w6HCusKjIGzDg8KgbVxuXG50csODwrJuIMOEwpHDocK6wr9uIGjDg8KgbmcgcGjDocK6wqduIG3DhsKww6HCu8KdaSkiLCJpc09rIjpmYWxzZX1dLCJjb3JyZWN0U2hvcnQiOiIifSx7Imx2bCI6InZkIiwidHlwZSI6IlNob3J0QW5zIiwidGl0bGUiOiIoVExOKSAoVkQpPC9zdHJvbmc+IEhhaSDDhMKRacOhwrvCh24gdMODwq1jaCBxPHN1Yj4xPC9zdWI+IHbDg8KgXG5cbnE8c3ViPjI8L3N1Yj4gw4TCkcOhwrrCt3QgY8ODwqFjaCBuaGF1IDMwIGNtIHRyb25nIGtow4PCtG5nIGtow4PCrSwgY2jDg8K6bmcgSMODwppUIG5oYXUgdsOhwrvCm2lcblxubcOhwrvCmXQgbMOhwrvCsWMgRiA9IDEsMiBOLiBCacOhwrrCv3QgcTxzdWI+MTwvc3ViPiAtIHE8c3ViPjI8L3N1Yj4gPSDDosKIwpJcblxuNi4xMDxzdXA+w6LCiMKSNjwvc3VwPkMgdsODwqAgfHE8c3ViPjE8L3N1Yj58ICZsdDsgfHE8c3ViPjI8L3N1Yj58LiBHacODwqEgdHLDocK7wosgcTJcblxubMODwqAgeC4xMDxzdXA+LTY8L3N1cD4gQy4gR2nDg8KhIHRyw6HCu8KLIHgga2hpIGzDg8KgbSB0csODwrJuIMOEwpHDocK6wr9uIGjDg8KgbmcgcGjDocK6wqduIGNow6HCu8KlYyBsw4PCoCIsIm9wdHMiOltdLCJjb3JyZWN0U2hvcnQiOiItNyw2In0seyJsdmwiOiJ2ZCIsInR5cGUiOiJTaG9ydEFucyIsInRpdGxlIjoiKFRMTikgKFZEKTwvc3Ryb25nPiBIYWkgw4TCkWnDocK7woduIHTDg8KtY2ggcTxzdWI+MTwvc3ViPiB2w4PCoFxuXG5xPHN1Yj4yPC9zdWI+IMOEwpHDocK6wrd0IGPDg8KhY2ggbmhhdSAzMCBjbSB0cm9uZyBraMODwrRuZyBraMODwq0sIGNow4PCum5nIEjDg8KaVCBuaGF1IHbDocK7wptpXG5cbm3DocK7wpl0IGzDocK7wrFjIEYgPSAxLDIgTi4gQmnDocK6wr90IHE8c3ViPjE8L3N1Yj4gLSBxPHN1Yj4yPC9zdWI+ID1cblxuNi4xMDxzdXA+w6LCiMKSNjwvc3VwPkMgdsODwqAgfHE8c3ViPjE8L3N1Yj58ICZndDsgfHE8c3ViPjI8L3N1Yj58LiBHacODwqEgdHLDocK7wosgcTJcblxubMODwqAgeC4xMDxzdXA+LTc8L3N1cD4gQy4gR2nDg8KhIHRyw6HCu8KLIHgga2hpIGzDg8KgbSB0csODwrJuIMOEwpHDocK6wr9uIGjDg8KgbmcgcGjDocK6wqduIGNow6HCu8KlYyBsw4PCoCIsIm9wdHMiOltdLCJjb3JyZWN0U2hvcnQiOiItMiwxIn1dfQ=="; 
+    let bank = { biet: [], hieu: [], vd: [], vdc: [] };
+    let currentExam = [];
+    let config = {};
+    let cheatCount = 0;
+    let isFinished = false;
+    window.userAns = {};
+
+    // --- XỬ LÝ MÃ HÓA UNICODE AN TOÀN (SỬA LỖI TIẾNG VIỆT) ---
+    function safeBtoa(str) {
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
+    }
+    function safeAtob(str) {
+        return decodeURIComponent(Array.prototype.map.call(atob(str), c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+    }
+
+    // --- Tự động nhảy điểm MCQ ---
+    function autoUpdateMCQWeight() {
+        const b = parseFloat(document.getElementById('w-short').value) || 0;
+        const c = parseFloat(document.getElementById('w-tf').value) || 0;
+        document.getElementById('w-mcq').value = Math.max(0, 10 - b - c).toFixed(1);
+    }
+    document.getElementById('w-short').oninput = autoUpdateMCQWeight;
+    document.getElementById('w-tf').oninput = autoUpdateMCQWeight;
+
+    // --- Hàm Parse đề đa dạng ---
+    function parseBank(html) {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        div.querySelectorAll('.MathJax_Preview, .MathJax_Display, mjx-container, .MathJax').forEach(el => el.remove());
+        bank = { biet: [], hieu: [], vd: [], vdc: [] };
+        let cur = null;
+        const elements = Array.from(div.querySelectorAll('p, div, li, tr, h1, h2, h3')).filter(el => !el.querySelector('p, div, li') && (el.innerText.trim() !== "" || el.querySelector('img')));
+        elements.forEach(el => {
+            let txt = el.innerText.trim();
+            if (txt.match(/^(Câu|Question|Bài)\s*\d+[\s.:-]/i)) {
+                if (cur) bank[cur.lvl].push(cur);
+                let lvl = "biet", lower = txt.toLowerCase();
+                if (lower.includes("vdc")) lvl = "vdc"; else if (lower.includes("vd")) lvl = "vd"; else if (lower.includes("hiểu")) lvl = "hieu";
+                let type = 'MCQ';
+                if (lower.match(/\(đ\/s\)|\(đúng sai\)/)) type = 'TF'; else if (lower.match(/\(tln\)|\(trả lời ngắn\)/)) type = 'ShortAns';
+                cur = { lvl, type, title: el.innerHTML.replace(/^(<strong>|<b>)?\s*(Câu|Question|Bài)\s*\d+.*?[:.-]?\s*(<\/strong>|<\/b>)?/i, ''), opts: [], correctShort: "" };
+            } else if (cur && txt.match(/^[A-Da-d][.:)]/)) {
+                cur.opts.push({ content: el.innerHTML.replace(/^(<strong>|<b>)?\s*[A-Da-d][.:)]\s*(<\/strong>|<\/b>)?/i, '').replace('#', '').trim(), isOk: txt.includes('#') });
+            } else if (cur && cur.type === 'ShortAns' && txt.includes('#')) {
+                cur.correctShort = txt.replace('#', '').trim();
+            } else if (cur) {
+                if (cur.opts.length === 0 || (cur.type === 'ShortAns' && !txt.includes('#'))) cur.title += "<br>" + el.innerHTML;
+            }
+        });
+        if (cur) bank[cur.lvl].push(cur);
+        updateMatrixUI();
+    }
+
+    function updateMatrixUI() {
+        const types = ['MCQ', 'TF', 'ShortAns'], idMap = { 'MCQ': 'mcq', 'TF': 'tf', 'ShortAns': 'short' };
+        let total = 0;
+        ['biet', 'hieu', 'vd', 'vdc'].forEach(lvl => {
+            types.forEach(type => {
+                const count = bank[lvl].filter(q => q.type === type).length;
+                total += count;
+                const displayEl = document.getElementById(`count-${idMap[type]}-${lvl}`);
+                const inputEl = document.getElementById(`m-${idMap[type]}-${lvl}`);
+                if (displayEl) displayEl.innerHTML = `Có: <b>${count}</b>`;
+                if (inputEl) {
+                    if (count > 0) inputEl.classList.add('has-questions');
+                    else inputEl.classList.remove('has-questions');
+                }
+            });
+        });
+        if (total > 0) {
+            document.getElementById('bank-info').classList.remove('hidden');
+            document.getElementById('bank-info').innerHTML = `✅ Đã nhận: ${total} câu hỏi.`;
+            document.getElementById('config-area').classList.remove('hidden');
+        }
+    }
+
+    function autoUpdateTotals() {
+        ['mcq', 'tf', 'short'].forEach(type => {
+            let total = 0;
+            ['biet', 'hieu', 'vd', 'vdc'].forEach(lvl => total += parseInt(document.getElementById(`m-${type}-${lvl}`).value) || 0);
+            document.getElementById(`total-selected-${type}`).innerText = `Chọn: ${total} câu`;
+        });
+    }
+
+    async function gradeQuiz() {
+        if (isFinished) return;
+        isFinished = true;
+        const w = config.weights || { a: 4, b: 3, c: 3 };
+        const cMCQ = window.activeExam.filter(q => q.type === 'MCQ').length;
+        const cShort = window.activeExam.filter(q => q.type === 'ShortAns').length;
+        const cTF = window.activeExam.filter(q => q.type === 'TF').length;
+        let sMCQRaw = 0, sShortRaw = 0, sTFPoints = 0;
+
+        let e = cMCQ > 0 ? (w.a / cMCQ) : 0, d = cShort > 0 ? (w.b / cShort) : 0, k = cTF > 0 ? (w.c / cTF) : 0;
+        let table = `<table><tr><th>Câu</th><th>Đ.Án</th><th>Chọn</th></tr>`;
+
+        window.activeExam.forEach((q, i) => {
+            let uS = "-", cS = "-";
+            const qBlock = document.getElementById(`q-block-${i}`);
+            if (q.type === 'MCQ') {
+                let sel = document.querySelector(`input[name="q${i}"]:checked`);
+                let sIdx = sel ? +sel.value : null, cIdx = q.opts.findIndex(o => o.isOk);
+                uS = sIdx !== null ? String.fromCharCode(65 + sIdx) : "-";
+                cS = String.fromCharCode(65 + cIdx);
+                if (sIdx === cIdx) sMCQRaw++;
+                if (config.mode === 'practice') {
+                    let items = qBlock.querySelectorAll('.opt-item');
+                    if (cIdx !== -1) items[cIdx].classList.add('is-correct');
+                    if (sIdx !== null && sIdx !== cIdx) items[sIdx].classList.add('is-wrong');
+                }
+            } else if (q.type === 'TF') {
+                let cCount = 0, uA = [], cA = [];
+                q.opts.forEach((o, j) => {
+                    let v = (window.userAns[i] && window.userAns[i][j] !== undefined) ? window.userAns[i][j] : null;
+                    if (v === o.isOk) cCount++;
+                    uA.push(v === null ? "?" : (v ? "Đ" : "S")); cA.push(o.isOk ? "Đ" : "S");
+                    if (config.mode === 'practice') {
+                        const btns = qBlock.querySelectorAll(`.tf-btn.q${i}o${j}`);
+                        if (o.isOk) btns[0].classList.add('is-correct'); else btns[1].classList.add('is-correct');
+                        if (v !== null && v !== o.isOk) btns[v ? 0 : 1].classList.add('is-wrong');
+                    }
+                });
+                sTFPoints += ([0, 0.1, 0.25, 0.5, 1][cCount] || 0) * k;
+                uS = uA.join("|"); cS = cA.join("|");
+            } else if (q.type === 'ShortAns') {
+                let val = document.getElementById(`short-${i}`).value.trim().toLowerCase();
+                uS = val || "-"; cS = q.correctShort;
+                if (val.replace(/,/g, '.') === cS.toLowerCase().replace(/,/g, '.')) sShortRaw++;
+                if (config.mode === 'practice') {
+                    let inp = document.getElementById(`short-${i}`);
+                    if (val.replace(/,/g, '.') === cS.toLowerCase().replace(/,/g, '.')) inp.classList.add('is-correct');
+                    else { inp.classList.add('is-wrong'); let h = document.createElement('div'); h.innerHTML = `<b style="color:var(--success)">ĐS: ${cS}</b>`; inp.parentNode.appendChild(h); }
+                }
+            }
+            table += `<tr><td>${i+1}</td><td>${cS}</td><td>${uS}</td></tr>`;
+        });
+
+        let total = Math.min(10, (sMCQRaw * e + sShortRaw * d + sTFPoints)).toFixed(2);
+        const now = new Date(), timeStr = now.toLocaleString('vi-VN');
+        const secCode = "VERI-" + safeBtoa(window.studentName + total + now.getSeconds()).substring(0, 8).toUpperCase();
+
+        document.getElementById('summary-body').innerHTML = `
+            <tr><td>MCQ</td><td>${cMCQ}</td><td>${sMCQRaw}</td><td>${(sMCQRaw * e).toFixed(2)}</td></tr>
+            <tr><td>Đúng/Sai</td><td>${cTF}</td><td>-</td><td>${sTFPoints.toFixed(2)}</td></tr>
+            <tr><td>Trả lời ngắn</td><td>${cShort}</td><td>${sShortRaw}</td><td>${(sShortRaw * d).toFixed(2)}</td></tr>
+            <tr style="font-weight:bold;color:red"><td colspan="3">TỔNG ĐIỂM</td><td>${total}</td></tr>`;
+        
+        document.getElementById('res-score').innerText = total;
+        document.getElementById('res-info').innerHTML = `Thí sinh: <b>${window.studentName}</b> | STT: ${window.studentSTT} | Lớp: ${window.studentClass}`;
+        document.getElementById('res-table-box').innerHTML = table + "</table>";
+        document.getElementById('res-timestamp').innerText = "Ngày nộp: " + timeStr;
+        document.getElementById('res-security-code').innerText = "Mã bảo mật: " + secCode;
+
+        document.getElementById('quiz-section').classList.add('hidden');
+        document.getElementById('result-section').classList.remove('hidden');
+
+        if (config.mode === 'test') {
+            const LOCK_KEY = "EXAM_LOCK_" + config.fileID;
+            localStorage.setItem(LOCK_KEY, JSON.stringify({ name: window.studentName, score: total, stt: window.studentSTT, className: window.studentClass, time: timeStr, code: secCode, table: table + "</table>", summary: document.getElementById('summary-body').innerHTML }));
+            sendToTelegram(window.studentName, total);
+            sendToGoogleSheet(window.studentName, window.studentSTT, window.studentClass, total, secCode);
+            setTimeout(downloadResult, 1500);
+        } else {
+             document.getElementById('review-content').innerHTML = `<h3>XEM LẠI BÀI LÀM:</h3>` + document.getElementById('quiz-content').innerHTML;
+        }
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    async function sendToGoogleSheet(name, stt, className, score, code) {
+        try {
+            if (!config.sheetUrl) return;
+            await fetch(config.sheetUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, stt, className, score, cheats: cheatCount, code }) });
+        } catch (e) {}
+    }
+
+    async function sendToTelegram(name, score) {
+        try {
+            if (!config.teleToken || !config.teleChatID) return;
+            const msg = `🎯 ĐIỂM: ${score}\n👤 Tên: ${name}\n🆔 STT: ${window.studentSTT}\n🏫 Lớp: ${window.studentClass}\n🚫 Lỗi: ${cheatCount}`;
+            await fetch(`https://api.telegram.org/bot${config.teleToken}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: config.teleChatID, text: msg }) });
+        } catch (e) {}
+    }
+
+    function downloadResult() {
+        const area = document.getElementById('capture-area');
+        html2canvas(area, { scale: 2, useCORS: true, windowHeight: area.scrollHeight + 100 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `KetQua_${window.studentSTT}_${window.studentName}.png`; link.href = canvas.toDataURL(); link.click();
+        });
+    }
+
+    function fillAllQuestions() {
+        const tMap = { 'mcq': 'MCQ', 'tf': 'TF', 'short': 'ShortAns' };
+        ['biet', 'hieu', 'vd', 'vdc'].forEach(l => {
+            ['mcq', 'tf', 'short'].forEach(t => document.getElementById(`m-${t}-${l}`).value = bank[l].filter(q => q.type === tMap[t]).length);
+        });
+        autoUpdateTotals();
+    }
+
+    function exportPackagedFile() {
+        const wB = parseFloat(document.getElementById('w-short').value) || 0, wC = parseFloat(document.getElementById('w-tf').value) || 0;
+        const pass = document.getElementById('set-pass').value;
+        if (!pass) return alert("Chưa có mật khẩu!");
+        let exportQs = [];
+        ['biet', 'hieu', 'vd', 'vdc'].forEach(l => {
+            ['mcq', 'tf', 'short'].forEach(t => {
+                const num = parseInt(document.getElementById(`m-${t}-${l}`).value) || 0;
+                const pool = bank[l].filter(q => q.type === (t === 'mcq' ? 'MCQ' : (t === 'tf' ? 'TF' : 'ShortAns')));
+                exportQs.push(...pool.sort(() => 0.5 - Math.random()).slice(0, num));
+            });
+        });
+        config = { pass, time: +document.getElementById('set-time').value, mode: document.getElementById('set-mode').value, teleToken: document.getElementById('tele-token').value, teleChatID: document.getElementById('tele-chatid').value, sheetUrl: document.getElementById('sheet-url').value, weights: { a: (10-wB-wC), b: wB, c: wC }, fileID: crypto.randomUUID() };
+        const encoded = safeBtoa(unescape(encodeURIComponent(JSON.stringify({ config, exam: exportQs }))));
+        const out = document.documentElement.outerHTML.replace("const EMBEDDED_DATA = null;", `const EMBEDDED_DATA = "${encoded}";`);
+        const blob = new Blob([out], { type: 'text/html' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "DE_THI_PRO.html"; a.click();
+    }
+
+    window.onload = function() {
+        if (!EMBEDDED_DATA) return;
+        document.getElementById('setup-section').style.display = 'none';
+        const decoded = JSON.parse(decodeURIComponent(escape(safeAtob(EMBEDDED_DATA))));
+        config = decoded.config; currentExam = decoded.exam; 
+        const LOCK_KEY = "EXAM_LOCK_" + config.fileID;
+        const saved = localStorage.getItem(LOCK_KEY);
+        if (config.mode === 'test' && saved) {
+            alert("Mã đề này bạn đã hoàn thành."); showFinalResult(JSON.parse(saved)); return;
+        }
+        document.getElementById('login-section').classList.remove('hidden');
+        document.getElementById('display-mode-name').innerText = config.mode === 'test' ? "CHẾ ĐỘ KIỂM TRA" : "CHẾ ĐỘ LUYỆN TẬP";
+    };
+
+    function showFinalResult(data) {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('result-section').classList.remove('hidden');
+        document.getElementById('res-score').innerText = data.score;
+        document.getElementById('res-info').innerHTML = `Thí sinh: <b>${data.name}</b> | STT: ${data.stt || '--'} | Lớp: ${data.className || '--'}`;
+        document.getElementById('res-table-box').innerHTML = data.table;
+        document.getElementById('summary-body').innerHTML = data.summary;
+        document.getElementById('res-timestamp').innerText = "Ngày nộp: " + data.time;
+        document.getElementById('res-security-code').innerText = "Mã bảo mật: " + data.code;
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    function validateStart() {
+        if (document.getElementById('stu-pass').value !== config.pass) return alert("Sai mật khẩu!");
+        window.studentName = document.getElementById('stu-name').value || "Học sinh";
+        window.studentSTT = document.getElementById('stu-stt').value || "0";
+        window.studentClass = document.getElementById('stu-class').value || "Lớp";
+        let exam = [...currentExam].sort(() => 0.5 - Math.random());
+        let time = config.time * 60;
+        if (config.mode === 'practice') {
+            const qty = parseInt(document.getElementById('practice-qty').value);
+            exam = exam.slice(0, qty);
+        }
+        window.activeExam = exam;
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('quiz-section').classList.remove('hidden');
+        document.getElementById('quiz-content').innerHTML = exam.map((q, i) => {
+            let html = "";
+            if (q.type === 'MCQ') {
+                q.opts.sort(() => 0.5 - Math.random());
+                html = q.opts.map((o, j) => `<label class="opt-item"><input type="radio" name="q${i}" value="${j}"><div class="opt-text"><b>${String.fromCharCode(65+j)}.</b> ${o.content}</div></label>`).join('');
+            } else if (q.type === 'TF') {
+                q.opts.sort(() => 0.5 - Math.random());
+                html = q.opts.map((o, j) => `<div class="tf-row"><div><b>${String.fromCharCode(97+j)}.</b> ${o.content}</div><div class="tf-btns"><button class="tf-btn q${i}o${j}" onclick="setTF(${i},${j},true,this)">Đ</button><button class="tf-btn q${i}o${j}" onclick="setTF(${i},${j},false,this)">S</button></div></div>`).join('');
+            } else {
+                html = `<div class="short-ans-box"><input type="text" id="short-${i}" class="matrix-input" placeholder="Nhập đáp án..."><small class="note-short">* Lưu ý: Nhập liệu chính xác theo yêu cầu đề bài.</small></div>`;
+            }
+            return `<div class="q-card" id="q-block-${i}"><b>Câu ${i+1}:</b> ${q.title}<div class="opt-list">${html}</div></div>`;
+        }).join('');
+        if (window.MathJax) MathJax.typesetPromise();
+        startTimer(time);
+        if (config.mode === 'test') {
+            window.onblur = () => { if(!isFinished) { cheatCount++; if(cheatCount >= 3) gradeQuiz(); else alert(`Cảnh báo! (${cheatCount}/3)`); } };
+        }
+    }
+
+    function startTimer(s) {
+        const tDiv = document.getElementById('timer');
+        const timer = setInterval(() => {
+            if (isFinished) return clearInterval(timer);
+            let m = Math.floor(s/60), sec = s%60;
+            tDiv.innerText = `${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+            if (s-- <= 0) { clearInterval(timer); gradeQuiz(); }
+        }, 1000);
+    }
+
+    function setTF(q, o, v, b) {
+        document.querySelectorAll(`.q${q}o${o}`).forEach(x => x.classList.remove('sel-true', 'sel-false'));
+        b.classList.add(v ? 'sel-true' : 'sel-false');
+        if(!window.userAns[q]) window.userAns[q] = {}; window.userAns[q][o] = v;
+    }
+
+    document.getElementById('file-input').onchange = e => {
+        const file = e.target.files[0], r = new FileReader();
+        if (file.name.endsWith('.docx')) { r.onload = ev => mammoth.convertToHtml({arrayBuffer: ev.target.result}).then(res => parseBank(res.value)); r.readAsArrayBuffer(file); }
+        else { r.onload = ev => parseBank(ev.target.result); r.readAsText(file); }
+    };
+</script>
+
+
+
+8222962204:AAGCVeCq_kh_xMlYiZcJ2f_uNc4Lb3SkfAs 
+
+Id: 886247945
+
+---AKfycbyrMy1bBpJFl-Au6czy6oN_9q5rxr2DJM0rhiLJ2Gj-UExc600qzlfjnYcvcgPXr_L-qg
+
+-----https://script.google.com/macros/s/AKfycbyrMy1bBpJFl-Au6czy6oN_9q5rxr2DJM0rhiLJ2Gj-UExc600qzlfjnYcvcgPXr_L-qg/exec
+--&gt;</body></html>
