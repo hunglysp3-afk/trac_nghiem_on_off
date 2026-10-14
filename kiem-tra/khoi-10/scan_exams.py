@@ -26,15 +26,15 @@ def parse_filename(filename):
     name_no_ext = os.path.splitext(filename)[0]
     
     # 1. Tìm tên lớp: A2, A5, A22 hoặc 11A2, 11A5...
-    class_match = re.search(r'(?:11)?([A-Za-z]\d+)', name_no_ext, re.IGNORECASE)
+    class_match = re.search(r'(?:1)?([A-Za-z]\d+)', name_no_ext, re.IGNORECASE)
     if not class_match:
         return None
     
     raw_class = class_match.group(1).upper()
-    class_id = raw_class if raw_class.startswith("11") else f"11{raw_class}"
+    class_id = raw_class if raw_class.startswith("1") else f"1{raw_class}"
     
     # 2. Loại bỏ phần tên lớp ở đầu để tìm chính xác dải số thứ tự (ví dụ: A2_16_30 -> 16_30)
-    remaining = re.sub(r'^(?:11)?[A-Za-z]\d+[_\-–]?', '', name_no_ext)
+    remaining = re.sub(r'^(?:1)?[A-Za-z]\d+[_\-–]?', '', name_no_ext)
     range_match = re.search(r'(\d+)[_\-–](\d+)', remaining)
     if range_match:
         start_num = int(range_match.group(1))
