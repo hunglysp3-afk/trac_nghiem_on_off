@@ -1,0 +1,75 @@
+[
+  {
+    "id": "10A11",
+    "name": "Lớp 10A11",
+    "password": "10a11",
+    "startTime": "2026-10-1 2:00",
+    "durationMinutes": 15,
+    "rooms": [
+      {
+        "title": "Lớp 10A11: Số 1 đến 15",
+        "desc": "Khu vực bài thi dành cho số thứ tự 1 - 15",
+        "file": "A11_1_15.html"
+      },
+      {
+        "title": "Lớp 10A11: Số 16 đến 30",
+        "desc": "Khu vực bài thi dành cho số thứ tự 16 - 30",
+        "file": "A11_16_30.html"
+      },
+      {
+        "title": "Lớp 10A11: Số 31 đến 50",
+        "desc": "Khu vực bài thi dành cho số thứ tự 31 - 50",
+        "file": "A11_31_50.html"
+      }
+    ]
+  },
+  {
+    "id": "10A20",
+    "name": "Lớp 10A20",
+    "password": "10a20",
+    "startTime": "2026-04-20 15:25",
+    "durationMinutes": 15,
+    "rooms": [
+      {
+        "title": "10A20: Số 1 đến 15",
+        "desc": "Khu vực bài thi dành cho số thứ tự 1 - 15",
+        "file": "A20_1_15.html"
+      },
+      {
+        "title": "10A20: Số 16 đến 30",
+        "desc": "Khu vực bài thi dành cho số thứ tự 16 - 30",
+        "file": "A20_16_30.html"
+      },
+      {
+        "title": "10A20: Số 31 đến 50",
+        "desc": "Khu vực bài thi dành cho số thứ tự 31 - 50",
+        "file": "A20_31_50.html"
+      }
+    ],
+    "endTimeFixed": "15:45"
+  },
+  {
+    "id": "10A23",
+    "name": "Lớp 10A23",
+    "password": "10a23",
+    "startTime": "2026-04-20 14:25",
+    "durationMinutes": 15,
+    "rooms": [
+      {
+        "title": "Lớp 10A23: Số 1 đến 15",
+        "desc": "Khu vực bài thi dành cho số thứ tự 1 - 15",
+        "file": "A23_1_15.html"
+      },
+      {
+        "title": "Lớp 10A23: Số 16 đến 30",
+        "desc": "Khu vực bài thi dành cho số thứ tự 16 - 30",
+        "file": "A23_16_30.html"
+      },
+      {
+        "title": "Lớp 10A23: Số 31 đến 50",
+        "desc": "Khu vực bài thi dành cho số thứ tự 31 - 50",
+        "file": "A23_31_50.html"
+      }
+    ]
+  }
+]
