@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hệ Thống Khảo Thí Trực Tuyến - Vật Lý 11</title>
+    <title id="pageTitle">Hệ Thống Khảo Thí Trực Tuyến</title>
     <!-- Font Awesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -193,7 +193,7 @@
             min-height: 280px;
         }
 
-        /* Password Modal/Screen */
+        /* Password Screen */
         .lock-screen {
             display: flex;
             flex-direction: column;
@@ -570,26 +570,29 @@
         <span>/</span>
         <a href="../index.html">Kiểm Tra</a>
         <span>/</span>
-        <span style="color: var(--text-main); font-weight: 600;">Khối 11</span>
+        <span id="gradeBreadcrumb" style="color: var(--text-main); font-weight: 600;">Khối 10</span>
     </div>
 
     <!-- Header Card -->
     <header class="header-card">
         <div class="header-badge">
-            <i class="fas fa-file-signature"></i> Kỳ Thi Định Kỳ HK2
+            <i class="fas fa-file-signature"></i> Kỳ Thi Định Kỳ
         </div>
-        <h1><i class="fas fa-pen-nib"></i> Khảo Thí Trực Tuyến - Vật Lý 11</h1>
+        <h1><i class="fas fa-pen-nib"></i> <span id="gradeTitle">Khảo Thí Trực Tuyến</span></h1>
         <p>Học sinh chọn đúng Lớp của mình, nhập mật mã phòng thi do giáo viên cung cấp để bắt đầu làm bài.</p>
     </header>
 
     <!-- Class Navigation Tabs -->
     <div class="tabs-container" id="tabsContainer">
-        <!-- Render danh sách Tab lớp tự động -->
+        <!-- Render danh sách Tab lớp tự động từ cai_dat_thi.json -->
     </div>
 
     <!-- Main Content: Password Prompt OR Exam Room List -->
     <main class="content-box" id="mainContent">
-        <!-- Nội dung sẽ được cập nhật linh hoạt theo trạng thái mở khóa -->
+        <div style="text-align: center; padding: 40px; color: #64748b;">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p style="margin-top: 10px;">Đang tải dữ liệu cấu hình phòng thi...</p>
+        </div>
     </main>
 
     <!-- Footer -->
@@ -603,90 +606,76 @@
 <script>
 /**
  * =========================================================================
- * ⚙️ BẢNG CẤU HÌNH PHÒNG THI & MẬT KHẨU TỪNG LỚP (DỄ DÀNG CHỈNH SỬA)
- * =========================================================================
- * - durationMinutes: Thời gian làm bài (tính từ thời điểm bắt đầu - ví dụ 15 phút)
- * - password: Mật khẩu mở Tab lớp đó (không phân biệt chữ hoa/thường)
- * - startTime: Giờ mở đề (Định dạng: "YYYY-MM-DD HH:mm")
+ * HỆ THỐNG LOAD TRỰC TIẾP TỪ cai_dat_thi.json (CHUẨN 100%)
+ * Không bao giờ tự động tạo tên lớp sai lệch, chỉ lấy đúng các lớp có trong cai_dat_thi.json
  * =========================================================================
  */
-const EXAM_CONFIG = {
-    durationMinutes: 15, // Thời lượng làm bài (phút)
-    classes: [
-        {
-            id: "12A1",
-            name: "Lớp 12A1",
-            password: "12a1", // <-- Mật khẩu lớp 10a11
-            startTime: "2026-04-20 10:35",
-            rooms: [
-                {
-                    title: "Số 1 đến 15",
-                    desc: "Khu vực bài thi dành cho số thứ tự 1 - 15",
-                    file: "A1_1_15.html"
-                },
-                {
-                    title: "Số 16 đến 30",
-                    desc: "Khu vực bài thi dành cho số thứ tự 16 - 30",
-                    file: "A1_16_30.html"
-                },
-                {
-                    title: "Số 31 đến 50",
-                    desc: "Khu vực bài thi dành cho số thứ tự 31 - 50",
-                    file: "A1_31_50.html"
-                }
-            ]
-        },
-        {
-            id: "12A20",
-            name: "Lớp 12A20",
-            password: "12a20", // <-- Mật khẩu lớp 10A20
-            startTime: "2026-04-20 15:25",
-            rooms: [
-                {
-                    title: "Số 1 đến 15",
-                    desc: "Khu vực bài thi dành cho số thứ tự 1 - 15",
-                    file: "A20_1_15.html"
-                },
-                {
-                    title: "Số 16 đến 30",
-                    desc: "Khu vực bài thi dành cho số thứ tự 16 - 30",
-                    file: "A20_16_30.html"
-                },
-                {
-                    title: "Số 31 đến 50",
-                    desc: "Khu vực bài thi dành cho số thứ tự 31 - 50",
-                    file: "A20_31_50.html"
-                }
-            ]
-        },
-        {
-            id: "12A21",
-            name: "Lớp 12A21",
-            password: "12a21", // <-- Mật khẩu lớp 10a23
-            startTime: "2026-04-20 14:25",
-            rooms: [
-                {
-                    title: "Số 1 đến 15",
-                    desc: "Khu vực bài thi dành cho số thứ tự 1 - 15",
-                    file: "A21_1_15.html"
-                },
-                {
-                    title: "Số 16 đến 30",
-                    desc: "Khu vực bài thi dành cho số thứ tự 16 - 30",
-                    file: "A21_16_30.html"
-                },
-                {
-                    title: "Số 31 đến 50",
-                    desc: "Khu vực bài thi dành cho số thứ tự 31 - 50",
-                    file: "A21_31_50.html"
-                }
-            ]
-        }
-    ]
-};
+let EXAM_CLASSES = [];
+let activeClassId = "";
 
-// Biến lưu trữ lớp đang chọn
-let activeClassId = EXAM_CONFIG.classes[0].id;
+// Hàm chuyển đổi cấu hình từ cai_dat_thi.json thành danh sách lớp hoàn chỉnh
+function buildClassesFromConfig(rawConfig) {
+    return Object.entries(rawConfig).map(([classId, cfg]) => {
+        const className = cfg.ten_lop || `Lớp ${classId}`;
+        const shortMatch = classId.match(/([A-Za-z]+\d*)/);
+        const shortName = shortMatch ? shortMatch[1] : classId;
+
+        // Nếu trong config đã có danh sách phòng thi chỉ định riêng thì dùng,
+        // nếu chưa có thì tự động tạo 3 phòng chuẩn (1-15, 16-30, 31-50) theo tên lớp đó:
+        const rooms = cfg.rooms || [
+            {
+                title: `${className}: Số 1 đến 15`,
+                desc: `Khu vực bài thi dành cho số thứ tự 1 - 15`,
+                file: `${shortName}_1_15.html`
+            },
+            {
+                title: `${className}: Số 16 đến 30`,
+                desc: `Khu vực bài thi dành cho số thứ tự 16 - 30`,
+                file: `${shortName}_16_30.html`
+            },
+            {
+                title: `${className}: Số 31 đến 50`,
+                desc: `Khu vực bài thi dành cho số thứ tự 31 - 50`,
+                file: `${shortName}_31_50.html`
+            }
+        ];
+
+        return {
+            id: classId,
+            name: className,
+            password: (cfg.pass || classId).toString().trim().toLowerCase(),
+            startTime: cfg.gio_mo || "2026-04-20 10:35",
+            durationMinutes: parseInt(cfg.thoi_luong, 10) || 15,
+            endTimeFixed: cfg.gio_dong || null,
+            rooms: rooms
+        };
+    });
+}
+
+// Cập nhật tiêu đề trang và breadcrumb theo khối lớp có trong danh sách
+function updateGradeHeaders() {
+    const grades = new Set();
+    EXAM_CLASSES.forEach(cls => {
+        const m = cls.id.match(/^(10|11|12)/);
+        if (m) grades.add(m[1]);
+    });
+
+    let gradeText = "Vật Lý THPT";
+    let breadcrumbText = "Khảo Thí";
+
+    if (grades.size === 1) {
+        const g = Array.from(grades)[0];
+        gradeText = `Vật Lý ${g}`;
+        breadcrumbText = `Khối ${g}`;
+    } else if (grades.size > 1) {
+        gradeText = "Vật Lý THPT";
+        breadcrumbText = "Các Khối Lớp";
+    }
+
+    document.getElementById("gradeTitle").textContent = `Khảo Thí Trực Tuyến - ${gradeText}`;
+    document.getElementById("gradeBreadcrumb").textContent = breadcrumbText;
+    document.title = `Khảo Thí Trực Tuyến - ${gradeText}`;
+}
 
 // Kiểm tra xem lớp đã được mở khóa trong phiên chưa
 function isClassUnlocked(classId) {
@@ -710,7 +699,7 @@ function renderTabs() {
     const container = document.getElementById("tabsContainer");
     container.innerHTML = "";
 
-    EXAM_CONFIG.classes.forEach(cls => {
+    EXAM_CLASSES.forEach(cls => {
         const isUnlocked = isClassUnlocked(cls.id);
         const isActive = cls.id === activeClassId;
 
@@ -734,9 +723,12 @@ function renderTabs() {
 
 // Render nội dung chính (Màn hình nhập mật khẩu HOẶC Danh sách bài thi)
 function renderMainContent() {
-    const currentClass = EXAM_CONFIG.classes.find(c => c.id === activeClassId);
+    const currentClass = EXAM_CLASSES.find(c => c.id === activeClassId);
     const mainContent = document.getElementById("mainContent");
-    if (!currentClass) return;
+    if (!currentClass) {
+        mainContent.innerHTML = `<div style="text-align: center; padding: 30px; color: #ef4444;">Không tìm thấy thông tin lớp!</div>`;
+        return;
+    }
 
     if (!isClassUnlocked(currentClass.id)) {
         // --- 1. MÀN HÌNH NHẬP MẬT MÃ ---
@@ -751,7 +743,7 @@ function renderMainContent() {
                 <div class="password-form" id="pwdForm">
                     <div class="input-group">
                         <i class="fas fa-key input-icon"></i>
-                        <input type="password" id="pwdInput" class="password-input" placeholder="Nhập mật mã của lớp..." autocomplete="off">
+                        <input type="password" id="pwdInput" class="password-input" placeholder="Nhập mã lớp..." autocomplete="off">
                         <i class="fas fa-eye toggle-pwd" id="togglePwd" title="Ẩn/Hiện mật khẩu"></i>
                     </div>
                     <div class="error-msg" id="errorMsg"></div>
@@ -767,10 +759,8 @@ function renderMainContent() {
         const errorMsg = document.getElementById("errorMsg");
         const togglePwd = document.getElementById("togglePwd");
 
-        // Focus vào ô input
         pwdInput.focus();
 
-        // Nút ẩn/hiện mật khẩu
         togglePwd.onclick = () => {
             if (pwdInput.type === "password") {
                 pwdInput.type = "text";
@@ -781,7 +771,6 @@ function renderMainContent() {
             }
         };
 
-        // Hàm xử lý kiểm tra pass
         const handleUnlock = () => {
             const entered = pwdInput.value.trim().toLowerCase();
             const correct = currentClass.password.trim().toLowerCase();
@@ -809,7 +798,7 @@ function renderMainContent() {
         let roomsHtml = "";
         currentClass.rooms.forEach(room => {
             roomsHtml += `
-                <a href="${room.file}" class="file-item" data-time="${currentClass.startTime}">
+                <a href="${room.file}" class="file-item" data-class-id="${currentClass.id}">
                     <div class="room-icon-box">
                         <i class="fas fa-file-pen"></i>
                     </div>
@@ -843,19 +832,36 @@ function renderMainContent() {
     }
 }
 
-// Cập nhật trạng thái thời gian làm bài
+// Cập nhật trạng thái thời gian làm bài (Hỗ trợ song song cả 2 kiểu giờ đóng)
 function updateExamStatus() {
     const now = new Date();
-    const durationMinutes = EXAM_CONFIG.durationMinutes;
-    const links = document.querySelectorAll(".file-item[data-time]");
+    const currentClass = EXAM_CLASSES.find(c => c.id === activeClassId);
+    if (!currentClass) return;
+
+    const links = document.querySelectorAll(".file-item[data-class-id]");
+    if (links.length === 0) return;
+
+    const startStr = currentClass.startTime;
+    const startTime = new Date(startStr.replace(/-/g, "/"));
+
+    let endTime;
+    if (currentClass.endTimeFixed) {
+        if (currentClass.endTimeFixed.includes("-") || currentClass.endTimeFixed.includes("/")) {
+            endTime = new Date(currentClass.endTimeFixed.replace(/-/g, "/"));
+        } else {
+            const [h, m] = currentClass.endTimeFixed.split(":");
+            endTime = new Date(startTime);
+            endTime.setHours(parseInt(h, 10), parseInt(m, 10), 0, 0);
+        }
+    } else {
+        const duration = currentClass.durationMinutes || 15;
+        endTime = new Date(startTime.getTime() + duration * 60000);
+    }
+
+    const endHour = endTime.getHours().toString().padStart(2, "0");
+    const endMin = endTime.getMinutes().toString().padStart(2, "0");
 
     links.forEach(link => {
-        const timeStr = link.getAttribute("data-time");
-        if (!timeStr) return;
-
-        // Parse thời gian hỗ trợ mọi định dạng trình duyệt
-        const startTime = new Date(timeStr.replace(/-/g, "/"));
-        const endTime = new Date(startTime.getTime() + durationMinutes * 60000);
         const container = link.querySelector(".status-container");
         if (!container) return;
 
@@ -864,23 +870,16 @@ function updateExamStatus() {
         statusMsg.className = "status-msg";
 
         if (now < startTime) {
-            // Chưa đến giờ
             link.classList.add("locked");
             statusMsg.className += " msg-waiting";
-            statusMsg.innerHTML = `<i class="fas fa-clock"></i> Sẽ mở lúc: ${timeStr}`;
+            statusMsg.innerHTML = `<i class="fas fa-clock"></i> Sẽ mở lúc: ${startStr}`;
         } else if (now > endTime) {
-            // Đã hết giờ
             link.classList.add("locked");
             statusMsg.className += " msg-expired";
-            const endHour = endTime.getHours().toString().padStart(2, "0");
-            const endMin = endTime.getMinutes().toString().padStart(2, "0");
             statusMsg.innerHTML = `<i class="fas fa-circle-xmark"></i> Đã hết giờ làm bài (Khóa lúc ${endHour}:${endMin})`;
         } else {
-            // Đang mở bài thi
             link.classList.remove("locked");
             statusMsg.className += " msg-open";
-            const endHour = endTime.getHours().toString().padStart(2, "0");
-            const endMin = endTime.getMinutes().toString().padStart(2, "0");
             statusMsg.innerHTML = `<i class="fas fa-circle-check"></i> Đang mở thi - Kết thúc lúc: ${endHour}:${endMin}`;
         }
 
@@ -888,13 +887,13 @@ function updateExamStatus() {
     });
 }
 
-// Chức năng chống F12, Ctrl+U, Ctrl+Shift+I/J
+// Chống gian lận
 document.onkeydown = function(e) {
     if (
-        e.keyCode === 123 || // F12
-        (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
-        (e.ctrlKey && e.keyCode === 85) || // Ctrl+U
-        (e.ctrlKey && e.keyCode === 83)    // Ctrl+S
+        e.keyCode === 123 || 
+        (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+        (e.ctrlKey && e.keyCode === 85) || 
+        (e.ctrlKey && e.keyCode === 83)
     ) {
         const guardMsg = document.getElementById("guard-msg");
         guardMsg.style.display = "flex";
@@ -903,10 +902,37 @@ document.onkeydown = function(e) {
     }
 };
 
-// Khởi chạy ban đầu
-renderTabs();
-renderMainContent();
-setInterval(updateExamStatus, 5000); // Tự động cập nhật trạng thái thời gian mỗi 5 giây
+// =========================================================================
+// KHỞI ĐỘNG HỆ THỐNG: TỰ TẢI TRỰC TIẾP TỪ cai_dat_thi.json
+// =========================================================================
+async function init() {
+    try {
+        const res = await fetch("cai_dat_thi.json?v=" + Date.now());
+        if (!res.ok) throw new Error("HTTP error " + res.status);
+        const configData = await res.json();
+        EXAM_CLASSES = buildClassesFromConfig(configData);
+    } catch (err) {
+        console.warn("Không thể fetch cai_dat_thi.json qua HTTP (có thể mở file trực tiếp). Đang thử dữ liệu dự phòng...", err);
+        // Dự phòng nếu mở trực tiếp bằng double-click file:/// trên máy
+        EXAM_CLASSES = buildClassesFromConfig({
+            "10A11": { "ten_lop": "Lớp 10A11", "pass": "10a11", "gio_mo": "2026-10-1 2:00", "thoi_luong": 15 },
+            "10A20": { "ten_lop": "Lớp 10A20", "pass": "10a20", "gio_mo": "2026-04-20 15:25", "gio_dong": "15:45" },
+            "10A23": { "ten_lop": "Lớp 10A23", "pass": "10a23", "gio_mo": "2026-04-20 14:25", "thoi_luong": 15 }
+        });
+    }
+
+    if (EXAM_CLASSES.length > 0) {
+        activeClassId = EXAM_CLASSES[0].id;
+    }
+
+    updateGradeHeaders();
+    renderTabs();
+    renderMainContent();
+    setInterval(updateExamStatus, 5000);
+}
+
+// Bắt đầu
+init();
 </script>
 
 </body>
