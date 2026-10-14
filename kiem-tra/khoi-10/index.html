@@ -193,7 +193,7 @@
             min-height: 280px;
         }
 
-        /* Password Modal/Screen */
+        /* Password Screen */
         .lock-screen {
             display: flex;
             flex-direction: column;
@@ -601,92 +601,89 @@
 </div>
 
 <script>
-/**
- * =========================================================================
- * ⚙️ BẢNG CẤU HÌNH PHÒNG THI & MẬT KHẨU TỪNG LỚP (DỄ DÀNG CHỈNH SỬA)
- * =========================================================================
- * - durationMinutes: Thời gian làm bài (tính từ thời điểm bắt đầu - ví dụ 15 phút)
- * - password: Mật khẩu mở Tab lớp đó (không phân biệt chữ hoa/thường)
- * - startTime: Giờ mở đề (Định dạng: "YYYY-MM-DD HH:mm")
- * =========================================================================
- */
-const EXAM_CONFIG = {
-    durationMinutes: 15, // Thời lượng làm bài (phút)
-    classes: [
-        {
-            id: "10A11",
-            name: "Lớp 10A11",
-            password: "10a11", // <-- Mật khẩu lớp 10a11
-            startTime: "2026-04-20 10:35",
-            rooms: [
-                {
-                    title: "Số 1 đến 15",
-                    desc: "Khu vực bài thi dành cho số thứ tự 1 - 15",
-                    file: "A2_1_15.html"
-                },
-                {
-                    title: "Số 16 đến 30",
-                    desc: "Khu vực bài thi dành cho số thứ tự 16 - 30",
-                    file: "A2_16_30.html"
-                },
-                {
-                    title: "Số 31 đến 50",
-                    desc: "Khu vực bài thi dành cho số thứ tự 31 - 50",
-                    file: "A2_31_50.html"
-                }
-            ]
-        },
-        {
-            id: "10A20",
-            name: "Lớp 10A20",
-            password: "10a20", // <-- Mật khẩu lớp 10A20
-            startTime: "2026-04-20 15:25",
-            rooms: [
-                {
-                    title: "Số 1 đến 15",
-                    desc: "Khu vực bài thi dành cho số thứ tự 1 - 15",
-                    file: "A5_1_15.html"
-                },
-                {
-                    title: "Số 16 đến 30",
-                    desc: "Khu vực bài thi dành cho số thứ tự 16 - 30",
-                    file: "A5_16_30.html"
-                },
-                {
-                    title: "Số 31 đến 50",
-                    desc: "Khu vực bài thi dành cho số thứ tự 31 - 50",
-                    file: "A5_31_50.html"
-                }
-            ]
-        },
-        {
-            id: "10A23",
-            name: "Lớp 10A23",
-            password: "10a23", // <-- Mật khẩu lớp 10a23
-            startTime: "2026-04-20 14:25",
-            rooms: [
-                {
-                    title: "Số 1 đến 15",
-                    desc: "Khu vực bài thi dành cho số thứ tự 1 - 15",
-                    file: "A22_1_15.html"
-                },
-                {
-                    title: "Số 16 đến 30",
-                    desc: "Khu vực bài thi dành cho số thứ tự 16 - 30",
-                    file: "A22_16_30.html"
-                },
-                {
-                    title: "Số 31 đến 50",
-                    desc: "Khu vực bài thi dành cho số thứ tự 31 - 50",
-                    file: "A22_31_50.html"
-                }
-            ]
-        }
-    ]
-};
+/* =========================================================================
+   DỮ LIỆU ĐỀ THI ĐƯỢC CẬP NHẬT TỰ ĐỘNG BỞI GITHUB ACTIONS / SCRIPT QUÉT
+   ========================================================================= */
+/* AUTO_EXAM_DATA_START */
+const EXAM_CLASSES = [
+    {
+        "id": "11A2",
+        "name": "Lớp 11A2",
+        "password": "11a2",
+        "startTime": "2026-04-20 10:35",
+        "durationMinutes": 15,
+        "rooms": [
+            {
+                "title": "11A2: Số 1 đến 15",
+                "desc": "Khu vực bài thi dành cho số thứ tự 1 - 15",
+                "file": "A2_1_15.html"
+            },
+            {
+                "title": "11A2: Số 16 đến 30",
+                "desc": "Khu vực bài thi dành cho số thứ tự 16 - 30",
+                "file": "A2_16_30.html"
+            },
+            {
+                "title": "11A2: Số 31 đến 50",
+                "desc": "Khu vực bài thi dành cho số thứ tự 31 - 50",
+                "file": "A2_31_50.html"
+            }
+        ]
+    },
+    {
+        "id": "11A5",
+        "name": "Lớp 11A5",
+        "password": "11a5",
+        "startTime": "2026-04-20 15:25",
+        "durationMinutes": 15,
+        "rooms": [
+            {
+                "title": "11A5: Số 1 đến 15",
+                "desc": "Khu vực bài thi dành cho số thứ tự 1 - 15",
+                "file": "A5_1_15.html"
+            },
+            {
+                "title": "11A5: Số 16 đến 30",
+                "desc": "Khu vực bài thi dành cho số thứ tự 16 - 30",
+                "file": "A5_16_30.html"
+            },
+            {
+                "title": "11A5: Số 31 đến 50",
+                "desc": "Khu vực bài thi dành cho số thứ tự 31 - 50",
+                "file": "A5_31_50.html"
+            }
+        ],
+        "endTimeFixed": "15:45"
+    },
+    {
+        "id": "11A22",
+        "name": "Lớp 11A22",
+        "password": "11a22",
+        "startTime": "2026-04-20 14:25",
+        "durationMinutes": 15,
+        "rooms": [
+            {
+                "title": "11A22: Số 1 đến 15",
+                "desc": "Khu vực bài thi dành cho số thứ tự 1 - 15",
+                "file": "A22_1_15.html"
+            },
+            {
+                "title": "11A22: Số 16 đến 30",
+                "desc": "Khu vực bài thi dành cho số thứ tự 16 - 30",
+                "file": "A22_16_30.html"
+            },
+            {
+                "title": "11A22: Số 31 đến 50",
+                "desc": "Khu vực bài thi dành cho số thứ tự 31 - 50",
+                "file": "A22_31_50.html"
+            }
+        ]
+    }
+];
+/* AUTO_EXAM_DATA_END */
 
 // Biến lưu trữ lớp đang chọn
-let activeClassId = EXAM_CONFIG.classes[0].id;
+let activeClassId = EXAM_CLASSES.length > 0 ? EXAM_CLASSES[0].id : "";
 
 // Kiểm tra xem lớp đã được mở khóa trong phiên chưa
 function isClassUnlocked(classId) {
@@ -710,7 +707,7 @@ function renderTabs() {
     const container = document.getElementById("tabsContainer");
     container.innerHTML = "";
 
-    EXAM_CONFIG.classes.forEach(cls => {
+    EXAM_CLASSES.forEach(cls => {
         const isUnlocked = isClassUnlocked(cls.id);
         const isActive = cls.id === activeClassId;
 
@@ -734,7 +731,7 @@ function renderTabs() {
 
 // Render nội dung chính (Màn hình nhập mật khẩu HOẶC Danh sách bài thi)
 function renderMainContent() {
-    const currentClass = EXAM_CONFIG.classes.find(c => c.id === activeClassId);
+    const currentClass = EXAM_CLASSES.find(c => c.id === activeClassId);
     const mainContent = document.getElementById("mainContent");
     if (!currentClass) return;
 
@@ -751,7 +748,7 @@ function renderMainContent() {
                 <div class="password-form" id="pwdForm">
                     <div class="input-group">
                         <i class="fas fa-key input-icon"></i>
-                        <input type="password" id="pwdInput" class="password-input" placeholder="Nhập mật mã của lớp..." autocomplete="off">
+                        <input type="password" id="pwdInput" class="password-input" placeholder="Nhập mã lớp..." autocomplete="off">
                         <i class="fas fa-eye toggle-pwd" id="togglePwd" title="Ẩn/Hiện mật khẩu"></i>
                     </div>
                     <div class="error-msg" id="errorMsg"></div>
@@ -809,7 +806,7 @@ function renderMainContent() {
         let roomsHtml = "";
         currentClass.rooms.forEach(room => {
             roomsHtml += `
-                <a href="${room.file}" class="file-item" data-time="${currentClass.startTime}">
+                <a href="${room.file}" class="file-item" data-class-id="${currentClass.id}">
                     <div class="room-icon-box">
                         <i class="fas fa-file-pen"></i>
                     </div>
@@ -843,19 +840,41 @@ function renderMainContent() {
     }
 }
 
-// Cập nhật trạng thái thời gian làm bài
+// Cập nhật trạng thái thời gian làm bài (Hỗ trợ song song cả 2 kiểu giờ đóng)
 function updateExamStatus() {
     const now = new Date();
-    const durationMinutes = EXAM_CONFIG.durationMinutes;
-    const links = document.querySelectorAll(".file-item[data-time]");
+    const currentClass = EXAM_CLASSES.find(c => c.id === activeClassId);
+    if (!currentClass) return;
+
+    const links = document.querySelectorAll(".file-item[data-class-id]");
+    if (links.length === 0) return;
+
+    // Phân tích Giờ Mở (startTime)
+    const startStr = currentClass.startTime;
+    const startTime = new Date(startStr.replace(/-/g, "/"));
+
+    // Phân tích Giờ Đóng (endTime) hỗ trợ cả 2 kiểu:
+    let endTime;
+    if (currentClass.endTimeFixed) {
+        // KIỂU B: Có chỉ định đích danh giờ đóng (ví dụ "15:45" hoặc "2026-04-20 15:45")
+        if (currentClass.endTimeFixed.includes("-") || currentClass.endTimeFixed.includes("/")) {
+            endTime = new Date(currentClass.endTimeFixed.replace(/-/g, "/"));
+        } else {
+            // Nếu chỉ nhập giờ "HH:mm", lấy cùng ngày với startTime
+            const [h, m] = currentClass.endTimeFixed.split(":");
+            endTime = new Date(startTime);
+            endTime.setHours(parseInt(h, 10), parseInt(m, 10), 0, 0);
+        }
+    } else {
+        // KIỂU A: Tự động tính theo thời lượng phút (startTime + durationMinutes)
+        const duration = currentClass.durationMinutes || 15;
+        endTime = new Date(startTime.getTime() + duration * 60000);
+    }
+
+    const endHour = endTime.getHours().toString().padStart(2, "0");
+    const endMin = endTime.getMinutes().toString().padStart(2, "0");
 
     links.forEach(link => {
-        const timeStr = link.getAttribute("data-time");
-        if (!timeStr) return;
-
-        // Parse thời gian hỗ trợ mọi định dạng trình duyệt
-        const startTime = new Date(timeStr.replace(/-/g, "/"));
-        const endTime = new Date(startTime.getTime() + durationMinutes * 60000);
         const container = link.querySelector(".status-container");
         if (!container) return;
 
@@ -864,23 +883,19 @@ function updateExamStatus() {
         statusMsg.className = "status-msg";
 
         if (now < startTime) {
-            // Chưa đến giờ
+            // Chưa đến giờ mở đề
             link.classList.add("locked");
             statusMsg.className += " msg-waiting";
-            statusMsg.innerHTML = `<i class="fas fa-clock"></i> Sẽ mở lúc: ${timeStr}`;
+            statusMsg.innerHTML = `<i class="fas fa-clock"></i> Sẽ mở lúc: ${startStr}`;
         } else if (now > endTime) {
-            // Đã hết giờ
+            // Đã hết thời gian làm bài
             link.classList.add("locked");
             statusMsg.className += " msg-expired";
-            const endHour = endTime.getHours().toString().padStart(2, "0");
-            const endMin = endTime.getMinutes().toString().padStart(2, "0");
             statusMsg.innerHTML = `<i class="fas fa-circle-xmark"></i> Đã hết giờ làm bài (Khóa lúc ${endHour}:${endMin})`;
         } else {
-            // Đang mở bài thi
+            // Đang trong thời gian làm bài
             link.classList.remove("locked");
             statusMsg.className += " msg-open";
-            const endHour = endTime.getHours().toString().padStart(2, "0");
-            const endMin = endTime.getMinutes().toString().padStart(2, "0");
             statusMsg.innerHTML = `<i class="fas fa-circle-check"></i> Đang mở thi - Kết thúc lúc: ${endHour}:${endMin}`;
         }
 
@@ -888,7 +903,7 @@ function updateExamStatus() {
     });
 }
 
-// Chức năng chống F12, Ctrl+U, Ctrl+Shift+I/J
+// Chức năng chống gian lận (F12, Ctrl+U, Ctrl+Shift+I/J, Ctrl+S)
 document.onkeydown = function(e) {
     if (
         e.keyCode === 123 || // F12
@@ -903,7 +918,7 @@ document.onkeydown = function(e) {
     }
 };
 
-// Khởi chạy ban đầu
+// Khởi chạy hệ thống
 renderTabs();
 renderMainContent();
 setInterval(updateExamStatus, 5000); // Tự động cập nhật trạng thái thời gian mỗi 5 giây
