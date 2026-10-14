@@ -1,0 +1,42 @@
+name: Tự Động Cập Nhật Danh Sách Đề Thi
+
+on:
+  push:
+    paths:
+      - '**/*.html'
+      - '**/*.json'
+      - '**/*.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-exams:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kiểm tra mã nguồn (Checkout)
+        uses: actions/checkout@v4
+
+      - name: Cài đặt môi trường Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Quét file đề thi và cập nhật index.html
+        run: |
+          SCAN_FILE=$(find . -name "scan_exams.py" | head -n 1)
+          if [ -n "$SCAN_FILE" ]; then
+            echo "Tìm thấy script tại: $SCAN_FILE"
+            python "$SCAN_FILE"
+          else
+            echo "Không tìm thấy file scan_exams.py!"
+            exit 1
+          fi
+
+      - name: Đẩy bản cập nhật lên GitHub (Commit & Push)
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Tự động cập nhật danh sách đề thi [skip ci]" && git push)
