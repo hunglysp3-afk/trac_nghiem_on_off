@@ -1,0 +1,100 @@
+[
+  {
+    "id": "11A3",
+    "name": "Lớp 11A3",
+    "password": "11a3",
+    "startTime": "2026-04-20 14:25",
+    "durationMinutes": 15,
+    "rooms": [
+      {
+        "title": "Lớp 11A3: Số 1 đến 15",
+        "desc": "Khu vực bài thi dành cho số thứ tự 1 - 15",
+        "file": "A3_1_15.html"
+      },
+      {
+        "title": "Lớp 11A3: Số 16 đến 30",
+        "desc": "Khu vực bài thi dành cho số thứ tự 16 - 30",
+        "file": "A3_16_30.html"
+      },
+      {
+        "title": "Lớp 11A3: Số 31 đến 50",
+        "desc": "Khu vực bài thi dành cho số thứ tự 31 - 50",
+        "file": "A3_31_50.html"
+      }
+    ]
+  },
+  {
+    "id": "11A9",
+    "name": "Lớp 11A9",
+    "password": "11a9",
+    "startTime": "2026-04-20 15:25",
+    "durationMinutes": 15,
+    "rooms": [
+      {
+        "title": "Lớp 11A9: Số 1 đến 15",
+        "desc": "Khu vực bài thi dành cho số thứ tự 1 - 15",
+        "file": "A9_1_15.html"
+      },
+      {
+        "title": "Lớp 11A9: Số 16 đến 30",
+        "desc": "Khu vực bài thi dành cho số thứ tự 16 - 30",
+        "file": "A9_16_30.html"
+      },
+      {
+        "title": "Lớp 11A9: Số 31 đến 50",
+        "desc": "Khu vực bài thi dành cho số thứ tự 31 - 50",
+        "file": "A9_31_50.html"
+      }
+    ],
+    "endTimeFixed": "15:45"
+  },
+  {
+    "id": "11A16",
+    "name": "Lớp 11A6",
+    "password": "11a6",
+    "startTime": "2026-10-1 2:00",
+    "durationMinutes": 15,
+    "rooms": [
+      {
+        "title": "Lớp 11A6: Số 1 đến 15",
+        "desc": "Khu vực bài thi dành cho số thứ tự 1 - 15",
+        "file": "A16_1_15.html"
+      },
+      {
+        "title": "Lớp 11A6: Số 16 đến 30",
+        "desc": "Khu vực bài thi dành cho số thứ tự 16 - 30",
+        "file": "A16_16_30.html"
+      },
+      {
+        "title": "Lớp 11A6: Số 31 đến 50",
+        "desc": "Khu vực bài thi dành cho số thứ tự 31 - 50",
+        "file": "A16_31_50.html"
+      }
+    ]
+  },
+  {
+    "id": "11A18",
+    "name": "Lớp 11A18",
+    "password": "11a18",
+    "startTime": "2026-04-20 15:25",
+    "durationMinutes": 15,
+    "rooms": [
+      {
+        "title": "Lớp 11A18: Số 1 đến 15",
+        "desc": "Khu vực bài thi dành cho số thứ tự 1 - 15",
+        "file": "A18_1_15.html"
+      },
+      {
+        "title": "Lớp 11A18: Số 16 đến 30",
+        "desc": "Khu vực bài thi dành cho số thứ tự 16 - 30",
+        "file": "A18_16_30.html"
+      },
+      {
+        "title": "Lớp 11A18: Số 31 đến 50",
+        "desc": "Khu vực bài thi dành cho số thứ tự 31 - 50",
+        "file": "A18_31_50.html"
+      }
+    ],
+    "endTimeFixed": "15:45"
+  }
+]
