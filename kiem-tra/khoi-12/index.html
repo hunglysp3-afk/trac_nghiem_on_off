@@ -2,201 +2,911 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nội dung Vật Lý Khối 12 - Kiểm Tra</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hệ Thống Khảo Thí Trực Tuyến - Vật Lý 11</title>
+    <!-- Font Awesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background-color: #f4f7f6; user-select: none; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        h2 { color: #d93025; border-bottom: 2px solid #d93025; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        
-        .breadcrumb { margin-bottom: 20px; font-size: 14px; color: #666; }
-        .breadcrumb a { color: #1a73e8; text-decoration: none; }
-
-        .list-group { margin-top: 20px; }
-        .file-item { 
-            display: flex; align-items: center; padding: 15px;
-            border-bottom: 1px solid #eee; text-decoration: none; color: #333;
-            transition: 0.2s; border-radius: 8px; position: relative;
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --radius: 16px;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 8px 24px rgba(37, 99, 235, 0.12);
         }
-        
-        /* Trạng thái khi chưa đến giờ hoặc hết giờ */
-        .file-item.locked {
-            background-color: #f8f9fa;
-            opacity: 0.6;
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 16px 40px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 820px;
+        }
+
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            color: #94a3b8;
+        }
+
+        /* Header Card */
+        .header-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: white;
+            padding: 24px 28px;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+            margin-bottom: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-card::after {
+            content: "";
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            width: 130px;
+            height: 130px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
             pointer-events: none;
-            cursor: not-allowed;
         }
 
-        .file-item:not(.locked):hover { background-color: #f1f3f4; transform: scale(1.01); color: #d93025; }
-        .file-item i.main-icon { font-size: 20px; margin-right: 15px; width: 25px; text-align: center; }
-        
-        .file-info { flex-grow: 1; }
-        .file-name { font-weight: 600; display: block; }
-        .file-type { font-size: 12px; color: #888; }
-        
-        .status-msg { font-size: 11px; font-weight: bold; display: block; margin-top: 4px; }
-        .msg-waiting { color: #f39c12; }
-        .msg-expired { color: #d32f2f; }
-        .msg-open { color: #28a745; }
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+        }
 
-        /* Thông báo chống F12 */
-        #guard-msg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); color: white; z-index: 9999; justify-content: center; align-items: center; text-align: center; font-size: 20px; }
+        .header-card h1 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-card p {
+            font-size: 14px;
+            color: #bfdbfe;
+            line-height: 1.5;
+        }
+
+        /* Class Tabs */
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .class-tab {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .class-tab:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            transform: translateY(-1px);
+        }
+
+        .class-tab.active {
+            background: #ffffff;
+            color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .class-tab .lock-status {
+            font-size: 13px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .class-tab .lock-status.locked {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .class-tab .lock-status.unlocked {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* Main Content Box */
+        .content-box {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            min-height: 280px;
+        }
+
+        /* Password Modal/Screen */
+        .lock-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 35px 20px;
+        }
+
+        .lock-icon-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+
+        .lock-screen h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .lock-screen p {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 440px;
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+
+        .password-form {
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-group i.input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 13px 44px 13px 44px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border-color);
+            background: #f8fafc;
+            font-size: 15px;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.2s;
+            text-align: center;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .password-input:focus {
+            background: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .toggle-pwd {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+
+        .toggle-pwd:hover {
+            color: var(--text-main);
+        }
+
+        .btn-unlock {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn-unlock:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 4px;
+            min-height: 18px;
+            transition: all 0.2s;
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        /* Exam Rooms List */
+        .exam-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1.5px solid var(--border-color);
+        }
+
+        .exam-title-box h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-relock {
+            background: #f1f5f9;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-relock:hover {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        .room-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .file-item {
+            background: #ffffff;
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .file-item:not(.locked):hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .file-item.locked {
+            background: #f8fafc;
+            opacity: 0.65;
+            cursor: not-allowed;
+            pointer-events: none;
+            border-color: #e2e8f0;
+        }
+
+        .room-icon-box {
+            width: 46px;
+            height: 46px;
+            min-width: 46px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: transform 0.2s;
+        }
+
+        .file-item:not(.locked):hover .room-icon-box {
+            transform: scale(1.08);
+            background: #dbeafe;
+        }
+
+        .room-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .room-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 3px;
+        }
+
+        .room-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        /* Status badges */
+        .status-msg {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 6px;
+            width: fit-content;
+        }
+
+        .msg-waiting {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .msg-open {
+            background: #dcfce7;
+            color: #15803d;
+            animation: pulse-green 2s infinite;
+        }
+
+        .msg-expired {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
+        }
+
+        .room-arrow {
+            color: #cbd5e1;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .file-item:not(.locked):hover .room-arrow {
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+
+        /* Anti F12 Guard Modal */
+        #guard-msg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(5px);
+            color: white;
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .guard-card {
+            background: #1e293b;
+            padding: 35px 30px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+        }
+
+        .guard-card i {
+            color: #f59e0b;
+            font-size: 54px;
+            margin-bottom: 16px;
+        }
+
+        .guard-card h4 {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .guard-card p {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .footer strong {
+            color: #64748b;
+        }
+
+        .footer-line {
+            width: 40px;
+            height: 2px;
+            background: #e2e8f0;
+            margin: 0 auto 12px;
+            border: none;
+        }
     </style>
 </head>
-<body oncontextmenu="return false;"> <div id="guard-msg"><div><i class="fas fa-user-shield fa-3x"></i><br><br>Hành động bị chặn để đảm bảo tính công bằng!</div></div>
+<body oncontextmenu="return false;">
 
-<div class="container">
-    <div class="breadcrumb">
-        <a href="https://hunglysp3-afk.github.io/trac_nghiem_on_off/index.html">Trang chủ</a> / 
-        <a href="https://hunglysp3-afk.github.io/trac_nghiem_on_off/">Kiểm Tra</a> / 
-        <span>Khối 12</span>
-    </div>
-
-    <h2><i class="fas fa-user-edit"></i> Kiểm Tra Thường Xuyên HK2</h2>
-
-    <div id="content-list" class="list-group">
-        <a href="KIEMTRA-CHUONG3.html" class="file-item" data-time="2026-07-15 09:05">
-            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
-            <div class="file-info">
-                <span class="file-name">Lớp 12 HÈ 2026 - sáng thứ 4</span>
-                <span class="file-type">Khu vực bài thi VVIP</span>
-            </div>
-            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
-        </a>
-<a href="KIEMTRA-CHUONG3.html" class="file-item" data-time="2026-07-15 15:35">
-            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
-            <div class="file-info">
-                <span class="file-name">Lớp 12 HÈ 2026 - CHIỀU THỨ 4</span>
-                <span class="file-type">Khu vực bài thi VVIP</span>
-            </div>
-            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
-        </a>
-
-
-        <a href="KIEMTRA-CHUONG3.html" class="file-item" data-time="2026-07-16 13:05">
-            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
-            <div class="file-info">
-                <span class="file-name">Lớp 12 HÈ 2026 - CHIỀU THỨ 5</span>
-                <span class="file-type">Khu vực bài thi VVIP</span>
-            </div>
-            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
-        </a>
-
-    
- 
-
-        <a href="A3_1_15.html" class="file-item" data-time="2026-04-16 07:35">
-            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
-            <div class="file-info">
-                <span class="file-name">Lớp 12A3: Số 1 đến 15</span>
-                <span class="file-type">Lớp 12A3:Khu vực bài thi dành cho số thứ tự 1-15</span>
-            </div>
-            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
-        </a>
-<a href="A3_16_30.html" class="file-item" data-time="2026-04-16 07:35">
-            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
-            <div class="file-info">
-                <span class="file-name">Lớp 12A3: Số 16 đến 30</span>
-                <span class="file-type">Lớp 12A3:Khu vực bài thi dành cho số thứ tự 16-30</span>
-            </div>
-            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
-        </a>
-<a href="A3_31_50.html" class="file-item" data-time="2026-04-16 07:35">
-            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
-            <div class="file-info">
-                <span class="file-name">Lớp 12A3: Số 31 đến 50</span>
-                <span class="file-type">Lớp 12A3:Khu vực bài thi dành cho số thứ tự 31-50</span>
-            </div>
-            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
-        </a>
-<a href="A23_31_50.html" class="file-item" data-time="2026-04-16 07:35">
-            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
-            <div class="file-info">
-                <span class="file-name">Lớp 12A23: Số 31 đến 50</span>
-                <span class="file-type">Lớp 12A23:Khu vực bài thi dành cho số thứ tự 31-50</span>
-            </div>
-            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
-        </a>
-<a href="A23_16_30.html" class="file-item" data-time="2026-04-16 07:35">
-            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
-            <div class="file-info">
-                <span class="file-name">Lớp 12A23: Số 16 đến 30</span>
-                <span class="file-type">Lớp 12A23:Khu vực bài thi dành cho số thứ tự 16-30</span>
-            </div>
-            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
-        </a>
-
-        <a href="A23_1_15.html" class="file-item" data-time="2026-04-16 07:35">
-            <i class="fas fa-file-alt main-icon" style="color: #4285f4"></i>
-            <div class="file-info">
-                <span class="file-name">Lớp 12A23: Số 1 đến 15</span>
-                <span class="file-type">Lớp 12A23:Khu vực bài thi dành cho số thứ tự 1-15</span>
-            </div>
-            <i class="fas fa-chevron-right arrow-icon" style="color: #eee; font-size: 12px;"></i>
-        </a>
-
-
+<!-- Hộp cảnh báo chống gian lận F12 -->
+<div id="guard-msg">
+    <div class="guard-card">
+        <i class="fas fa-shield-halved"></i>
+        <h4>Cảnh Báo Hệ Thống!</h4>
+        <p>Hành động mở mã nguồn bị chặn nhằm bảo đảm tính công bằng và nghiêm túc của kỳ thi.</p>
     </div>
 </div>
 
+<div class="container">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="https://hunglysp3-afk.github.io/trac_nghiem_on_off/index.html">Trang chủ</a>
+        <span>/</span>
+        <a href="../index.html">Kiểm Tra</a>
+        <span>/</span>
+        <span style="color: var(--text-main); font-weight: 600;">Khối 11</span>
+    </div>
+
+    <!-- Header Card -->
+    <header class="header-card">
+        <div class="header-badge">
+            <i class="fas fa-file-signature"></i> Kỳ Thi Định Kỳ HK2
+        </div>
+        <h1><i class="fas fa-pen-nib"></i> Khảo Thí Trực Tuyến - Vật Lý 11</h1>
+        <p>Học sinh chọn đúng Lớp của mình, nhập mật mã phòng thi do giáo viên cung cấp để bắt đầu làm bài.</p>
+    </header>
+
+    <!-- Class Navigation Tabs -->
+    <div class="tabs-container" id="tabsContainer">
+        <!-- Render danh sách Tab lớp tự động -->
+    </div>
+
+    <!-- Main Content: Password Prompt OR Exam Room List -->
+    <main class="content-box" id="mainContent">
+        <!-- Nội dung sẽ được cập nhật linh hoạt theo trạng thái mở khóa -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <hr class="footer-line">
+        &copy; 2026 - Tác giả: <strong>[NVH-DTTH]</strong><br>
+        Trường THPT Hùng Vương - Tổ Vật Lý
+    </footer>
+</div>
+
 <script>
-    // 1. CHỨC NĂNG QUẢN LÝ THỜI GIAN (MỞ 45 PHÚT)
-    function updateExamStatus() {
-        const now = new Date();
-        const durationMinutes = 90; // THỜI GIAN LÀM BÀI: 45 PHÚT
-        const links = document.querySelectorAll('.file-item[data-time]');
-
-        links.forEach(link => {
-            const startTime = new Date(link.getAttribute('data-time'));
-            const endTime = new Date(startTime.getTime() + durationMinutes * 60000);
-            const fileInfo = link.querySelector('.file-info');
-            
-            // Xóa thông báo cũ nếu có
-            const oldMsg = link.querySelector('.status-msg');
-            if (oldMsg) oldMsg.remove();
-
-            const statusMsg = document.createElement('span');
-            statusMsg.className = 'status-msg';
-
-            if (now < startTime) {
-                // CHƯA ĐẾN GIỜ
-                link.classList.add('locked');
-                statusMsg.innerHTML = `<i class="fas fa-clock"></i> Sẽ mở lúc: ${link.getAttribute('data-time')}`;
-                statusMsg.className += ' msg-waiting';
-                fileInfo.appendChild(statusMsg);
-            } 
-            else if (now > endTime) {
-                // ĐÃ HẾT GIỜ (QUÁ 45 PHÚT)
-                link.classList.add('locked');
-                statusMsg.innerHTML = `<i class="fas fa-times-circle"></i> Đã hết thời gian làm bài (Khóa lúc ${endTime.getHours()}:${endTime.getMinutes().toString().padStart(2, '0')})`;
-                statusMsg.className += ' msg-expired';
-                fileInfo.appendChild(statusMsg);
-                link.querySelector('.main-icon').style.color = '#ccc';
-            } 
-            else {
-                // ĐANG TRONG GIỜ LÀM BÀI
-                link.classList.remove('locked');
-                statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Đang mở - Kết thúc lúc: ${endTime.getHours()}:${endTime.getMinutes().toString().padStart(2, '0')}`;
-                statusMsg.className += ' msg-open';
-                fileInfo.appendChild(statusMsg);
-                link.querySelector('.arrow-icon').style.color = '#28a745';
-            }
-        });
-    }
-
-    // 2. CHỨC NĂNG BẢO VỆ (CHỐNG F12, CTRL+U, CHUỘT PHẢI)
-    document.onkeydown = function(e) {
-        if (e.keyCode == 123 || (e.ctrlKey && (e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) || (e.ctrlKey && e.keyCode == 85)) {
-            document.getElementById('guard-msg').style.display = 'flex';
-            setTimeout(() => { document.getElementById('guard-msg').style.display = 'none'; }, 2000);
-            return false;
+/**
+ * =========================================================================
+ * ⚙️ BẢNG CẤU HÌNH PHÒNG THI & MẬT KHẨU TỪNG LỚP (DỄ DÀNG CHỈNH SỬA)
+ * =========================================================================
+ * - durationMinutes: Thời gian làm bài (tính từ thời điểm bắt đầu - ví dụ 15 phút)
+ * - password: Mật khẩu mở Tab lớp đó (không phân biệt chữ hoa/thường)
+ * - startTime: Giờ mở đề (Định dạng: "YYYY-MM-DD HH:mm")
+ * =========================================================================
+ */
+const EXAM_CONFIG = {
+    durationMinutes: 15, // Thời lượng làm bài (phút)
+    classes: [
+        {
+            id: "12A1",
+            name: "Lớp 12A1",
+            password: "12a1", // <-- Mật khẩu lớp 10a11
+            startTime: "2026-04-20 10:35",
+            rooms: [
+                {
+                    title: "Số 1 đến 15",
+                    desc: "Khu vực bài thi dành cho số thứ tự 1 - 15",
+                    file: "A1_1_15.html"
+                },
+                {
+                    title: "Số 16 đến 30",
+                    desc: "Khu vực bài thi dành cho số thứ tự 16 - 30",
+                    file: "A1_16_30.html"
+                },
+                {
+                    title: "Số 31 đến 50",
+                    desc: "Khu vực bài thi dành cho số thứ tự 31 - 50",
+                    file: "A1_31_50.html"
+                }
+            ]
+        },
+        {
+            id: "12A20",
+            name: "Lớp 12A20",
+            password: "12a20", // <-- Mật khẩu lớp 10A20
+            startTime: "2026-04-20 15:25",
+            rooms: [
+                {
+                    title: "Số 1 đến 15",
+                    desc: "Khu vực bài thi dành cho số thứ tự 1 - 15",
+                    file: "A20_1_15.html"
+                },
+                {
+                    title: "Số 16 đến 30",
+                    desc: "Khu vực bài thi dành cho số thứ tự 16 - 30",
+                    file: "A20_16_30.html"
+                },
+                {
+                    title: "Số 31 đến 50",
+                    desc: "Khu vực bài thi dành cho số thứ tự 31 - 50",
+                    file: "A20_31_50.html"
+                }
+            ]
+        },
+        {
+            id: "12A21",
+            name: "Lớp 12A21",
+            password: "12a21", // <-- Mật khẩu lớp 10a23
+            startTime: "2026-04-20 14:25",
+            rooms: [
+                {
+                    title: "Số 1 đến 15",
+                    desc: "Khu vực bài thi dành cho số thứ tự 1 - 15",
+                    file: "A21_1_15.html"
+                },
+                {
+                    title: "Số 16 đến 30",
+                    desc: "Khu vực bài thi dành cho số thứ tự 16 - 30",
+                    file: "A21_16_30.html"
+                },
+                {
+                    title: "Số 31 đến 50",
+                    desc: "Khu vực bài thi dành cho số thứ tự 31 - 50",
+                    file: "A21_31_50.html"
+                }
+            ]
         }
-    };
+    ]
+};
 
-    // Khởi chạy
-    updateExamStatus();
-    setInterval(updateExamStatus, 10000); // Cập nhật mỗi 10 giây
+// Biến lưu trữ lớp đang chọn
+let activeClassId = EXAM_CONFIG.classes[0].id;
+
+// Kiểm tra xem lớp đã được mở khóa trong phiên chưa
+function isClassUnlocked(classId) {
+    return sessionStorage.getItem("unlocked_" + classId) === "true";
+}
+
+// Lưu trạng thái mở khóa
+function unlockClass(classId) {
+    sessionStorage.setItem("unlocked_" + classId, "true");
+}
+
+// Khóa lại lớp
+function relockClass(classId) {
+    sessionStorage.removeItem("unlocked_" + classId);
+    renderTabs();
+    renderMainContent();
+}
+
+// Render Tabs chọn lớp
+function renderTabs() {
+    const container = document.getElementById("tabsContainer");
+    container.innerHTML = "";
+
+    EXAM_CONFIG.classes.forEach(cls => {
+        const isUnlocked = isClassUnlocked(cls.id);
+        const isActive = cls.id === activeClassId;
+
+        const btn = document.createElement("button");
+        btn.className = `class-tab ${isActive ? "active" : ""}`;
+        btn.onclick = () => {
+            activeClassId = cls.id;
+            renderTabs();
+            renderMainContent();
+        };
+
+        btn.innerHTML = `
+            <span><i class="fas fa-graduation-cap"></i> ${cls.name}</span>
+            <span class="lock-status ${isUnlocked ? 'unlocked' : 'locked'}">
+                <i class="fas ${isUnlocked ? 'fa-lock-open' : 'fa-lock'}"></i>
+            </span>
+        `;
+        container.appendChild(btn);
+    });
+}
+
+// Render nội dung chính (Màn hình nhập mật khẩu HOẶC Danh sách bài thi)
+function renderMainContent() {
+    const currentClass = EXAM_CONFIG.classes.find(c => c.id === activeClassId);
+    const mainContent = document.getElementById("mainContent");
+    if (!currentClass) return;
+
+    if (!isClassUnlocked(currentClass.id)) {
+        // --- 1. MÀN HÌNH NHẬP MẬT MÃ ---
+        mainContent.innerHTML = `
+            <div class="lock-screen">
+                <div class="lock-icon-circle">
+                    <i class="fas fa-user-lock"></i>
+                </div>
+                <h3>Yêu Cầu Mật Mã - ${currentClass.name}</h3>
+                <p>Khu vực bài thi có mật khẩu bảo vệ. Vui lòng nhập mã mở phòng do giáo viên cung cấp để xem danh sách bài kiểm tra.</p>
+
+                <div class="password-form" id="pwdForm">
+                    <div class="input-group">
+                        <i class="fas fa-key input-icon"></i>
+                        <input type="password" id="pwdInput" class="password-input" placeholder="Nhập mật mã của lớp..." autocomplete="off">
+                        <i class="fas fa-eye toggle-pwd" id="togglePwd" title="Ẩn/Hiện mật khẩu"></i>
+                    </div>
+                    <div class="error-msg" id="errorMsg"></div>
+                    <button class="btn-unlock" id="btnUnlock">
+                        <i class="fas fa-unlock"></i> Mở Khóa Vào Thi
+                    </button>
+                </div>
+            </div>
+        `;
+
+        const pwdInput = document.getElementById("pwdInput");
+        const btnUnlock = document.getElementById("btnUnlock");
+        const errorMsg = document.getElementById("errorMsg");
+        const togglePwd = document.getElementById("togglePwd");
+
+        // Focus vào ô input
+        pwdInput.focus();
+
+        // Nút ẩn/hiện mật khẩu
+        togglePwd.onclick = () => {
+            if (pwdInput.type === "password") {
+                pwdInput.type = "text";
+                togglePwd.className = "fas fa-eye-slash toggle-pwd";
+            } else {
+                pwdInput.type = "password";
+                togglePwd.className = "fas fa-eye toggle-pwd";
+            }
+        };
+
+        // Hàm xử lý kiểm tra pass
+        const handleUnlock = () => {
+            const entered = pwdInput.value.trim().toLowerCase();
+            const correct = currentClass.password.trim().toLowerCase();
+
+            if (entered === correct) {
+                unlockClass(currentClass.id);
+                renderTabs();
+                renderMainContent();
+            } else {
+                errorMsg.textContent = "Mật khẩu không chính xác! Vui lòng thử lại.";
+                pwdInput.classList.add("shake");
+                setTimeout(() => pwdInput.classList.remove("shake"), 400);
+                pwdInput.value = "";
+                pwdInput.focus();
+            }
+        };
+
+        btnUnlock.onclick = handleUnlock;
+        pwdInput.onkeydown = (e) => {
+            if (e.key === "Enter") handleUnlock();
+        };
+
+    } else {
+        // --- 2. MÀN HÌNH DANH SÁCH BÀI THI KHI ĐÃ NHẬP ĐÚNG PASS ---
+        let roomsHtml = "";
+        currentClass.rooms.forEach(room => {
+            roomsHtml += `
+                <a href="${room.file}" class="file-item" data-time="${currentClass.startTime}">
+                    <div class="room-icon-box">
+                        <i class="fas fa-file-pen"></i>
+                    </div>
+                    <div class="room-info">
+                        <div class="room-name">${room.title}</div>
+                        <div class="room-desc">${room.desc}</div>
+                        <div class="status-container"></div>
+                    </div>
+                    <div class="room-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+            `;
+        });
+
+        mainContent.innerHTML = `
+            <div class="exam-header">
+                <div class="exam-title-box">
+                    <h3><i class="fas fa-folder-open" style="color: var(--primary);"></i> Phòng Thi: ${currentClass.name}</h3>
+                </div>
+                <button class="btn-relock" onclick="relockClass('${currentClass.id}')" title="Khóa lại tab này">
+                    <i class="fas fa-lock"></i> Khóa lại Tab
+                </button>
+            </div>
+            <div class="room-grid" id="roomGrid">
+                ${roomsHtml}
+            </div>
+        `;
+
+        updateExamStatus();
+    }
+}
+
+// Cập nhật trạng thái thời gian làm bài
+function updateExamStatus() {
+    const now = new Date();
+    const durationMinutes = EXAM_CONFIG.durationMinutes;
+    const links = document.querySelectorAll(".file-item[data-time]");
+
+    links.forEach(link => {
+        const timeStr = link.getAttribute("data-time");
+        if (!timeStr) return;
+
+        // Parse thời gian hỗ trợ mọi định dạng trình duyệt
+        const startTime = new Date(timeStr.replace(/-/g, "/"));
+        const endTime = new Date(startTime.getTime() + durationMinutes * 60000);
+        const container = link.querySelector(".status-container");
+        if (!container) return;
+
+        container.innerHTML = "";
+        const statusMsg = document.createElement("span");
+        statusMsg.className = "status-msg";
+
+        if (now < startTime) {
+            // Chưa đến giờ
+            link.classList.add("locked");
+            statusMsg.className += " msg-waiting";
+            statusMsg.innerHTML = `<i class="fas fa-clock"></i> Sẽ mở lúc: ${timeStr}`;
+        } else if (now > endTime) {
+            // Đã hết giờ
+            link.classList.add("locked");
+            statusMsg.className += " msg-expired";
+            const endHour = endTime.getHours().toString().padStart(2, "0");
+            const endMin = endTime.getMinutes().toString().padStart(2, "0");
+            statusMsg.innerHTML = `<i class="fas fa-circle-xmark"></i> Đã hết giờ làm bài (Khóa lúc ${endHour}:${endMin})`;
+        } else {
+            // Đang mở bài thi
+            link.classList.remove("locked");
+            statusMsg.className += " msg-open";
+            const endHour = endTime.getHours().toString().padStart(2, "0");
+            const endMin = endTime.getMinutes().toString().padStart(2, "0");
+            statusMsg.innerHTML = `<i class="fas fa-circle-check"></i> Đang mở thi - Kết thúc lúc: ${endHour}:${endMin}`;
+        }
+
+        container.appendChild(statusMsg);
+    });
+}
+
+// Chức năng chống F12, Ctrl+U, Ctrl+Shift+I/J
+document.onkeydown = function(e) {
+    if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
+        (e.ctrlKey && e.keyCode === 85) || // Ctrl+U
+        (e.ctrlKey && e.keyCode === 83)    // Ctrl+S
+    ) {
+        const guardMsg = document.getElementById("guard-msg");
+        guardMsg.style.display = "flex";
+        setTimeout(() => { guardMsg.style.display = "none"; }, 2000);
+        return false;
+    }
+};
+
+// Khởi chạy ban đầu
+renderTabs();
+renderMainContent();
+setInterval(updateExamStatus, 5000); // Tự động cập nhật trạng thái thời gian mỗi 5 giây
 </script>
 
 </body>
