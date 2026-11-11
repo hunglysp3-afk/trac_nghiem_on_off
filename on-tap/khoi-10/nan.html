@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ĐỀ ÔN KIỂM TRA GIỮA HỌC KÌ I - VẬT LÍ 10</title>
+<style>
+:root {
+  --primary: #1e40af;
+  --primary-light: #3b82f6;
+  --secondary: #0d9488;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --success: #16a34a;
+  --success-bg: #dcfce7;
+  --danger: #dc2626;
+  --danger-bg: #fee2e2;
+  --warning-bg: #fef3c7;
+  --warning-text: #b45309;
+  --radius: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+body { background: var(--bg); color: var(--text-main); line-height: 1.6; padding: 20px 10px; }
+.container { max-width: 920px; margin: 0 auto; background: var(--card-bg); border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,0.06); padding: 30px 40px; border: 1px solid var(--border); }
+@media (max-width: 768px) {
+  .container { padding: 15px 12px; }
+}
+
+/* Header */
+.exam-header { text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 18px; margin-bottom: 25px; }
+.exam-header h1 { font-size: 22px; text-transform: uppercase; color: var(--primary); letter-spacing: 0.5px; }
+.exam-header .sub-title { font-size: 15px; color: #475569; font-weight: 600; margin-top: 4px; }
+.meta-row { display: flex; justify-content: space-between; flex-wrap: wrap; margin-top: 15px; background: #f1f5f9; padding: 10px 16px; border-radius: 8px; font-size: 14px; gap: 8px; }
+.meta-row input { padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; }
+
+/* Sticky Timer & Control Bar */
+.control-bar { position: sticky; top: 10px; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-radius: 8px; padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 10px; }
+.timer-box { font-weight: 700; font-size: 16px; color: var(--danger); display: flex; align-items: center; gap: 8px; }
+.btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+button { cursor: pointer; border: none; border-radius: 6px; padding: 8px 14px; font-weight: 600; font-size: 14px; transition: 0.2s; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: #1d4ed8; }
+.btn-success { background: var(--success); color: #fff; }
+.btn-success:hover { background: #15803d; }
+.btn-outline { background: #fff; border: 1px solid #cbd5e1; color: var(--text-main); }
+.btn-outline:hover { background: #f1f5f9; }
+
+/* Sections */
+.part-title { background: #eff6ff; color: var(--primary); border-left: 5px solid var(--primary); padding: 10px 14px; font-size: 16px; font-weight: 700; text-transform: uppercase; margin: 30px 0 18px 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.part-desc { font-style: italic; color: var(--text-muted); font-size: 13.5px; margin-bottom: 15px; }
+
+/* Question Cards */
+.question-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; margin-bottom: 18px; transition: border-color 0.2s; }
+.question-card:hover { border-color: #94a3b8; }
+.q-title { font-weight: 600; margin-bottom: 12px; color: #0f172a; font-size: 15px; }
+.q-title .badge { background: #e0e7ff; color: var(--primary); padding: 2px 7px; border-radius: 4px; font-size: 12px; margin-right: 6px; }
+
+/* MC Options (Part I) */
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+@media (max-width: 640px) { .options-grid { grid-template-columns: 1fr; } }
+.opt-label { display: flex; align-items: flex-start; gap: 8px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: 0.15s; background: #fafafa; font-size: 14.5px; }
+.opt-label:hover { background: #f0fdf4; border-color: #86efac; }
+.opt-label input[type="radio"] { margin-top: 3px; accent-color: var(--primary); }
+
+/* True/False Table (Part II) */
+.tf-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14.5px; }
+.tf-table th, .tf-table td { border: 1px solid #cbd5e1; padding: 8px 12px; text-align: left; }
+.tf-table th { background: #f8fafc; font-weight: 600; text-align: center; }
+.tf-table td.tf-check { text-align: center; width: 65px; }
+.tf-table td.tf-check input { accent-color: var(--primary); cursor: pointer; transform: scale(1.15); }
+
+/* Short Answer (Part III) */
+.short-input-box { margin-top: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.short-input-box input { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; width: 160px; font-weight: 600; color: #0f172a; }
+.short-input-box .unit-label { font-size: 14px; color: var(--text-muted); }
+
+/* Solution toggle & Box */
+.solution-btn { background: #f1f5f9; border: 1px dashed #94a3b8; color: #334155; padding: 5px 10px; font-size: 12.5px; border-radius: 4px; margin-top: 12px; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
+.solution-btn:hover { background: #e2e8f0; color: #0f172a; }
+.solution-box { display: none; background: #f8fafc; border-left: 4px solid var(--secondary); padding: 12px 14px; margin-top: 10px; border-radius: 0 6px 6px 0; font-size: 14px; color: #334155; line-height: 1.7; }
+.solution-box.show { display: block; }
+.solution-box strong.hd { color: var(--secondary); display: block; margin-bottom: 5px; font-size: 13.5px; }
+
+/* SVG Graph Container */
+.graph-container { text-align: center; margin: 15px 0; background: #ffffff; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; display: inline-block; }
+.graph-caption { font-size: 13px; font-weight: 600; color: #475569; margin-top: 6px; }
+
+/* Status Styles */
+.correct-highlight { background: var(--success-bg) !important; border-color: var(--success) !important; color: #166534 !important; font-weight: 600; }
+.wrong-highlight { background: var(--danger-bg) !important; border-color: var(--danger) !important; color: #991b1b !important; }
+
+/* Score Modal / Result Box */
+#scoreBox { display: none; background: #f0fdf4; border: 2px solid var(--success); border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0; }
+#scoreBox h2 { color: var(--success); font-size: 22px; margin-bottom: 8px; }
+#scoreDetails { font-size: 15px; color: #166534; line-height: 1.8; }
+
+/* Math style */
+.math { font-family: 'Times New Roman', Times, serif; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Exam Header -->
+  <div class="exam-header">
+    <h1>ĐỀ ÔN TẬP KIỂM TRA GIỮA HỌC KÌ I</h1>
+    <div class="sub-title">MÔN: VẬT LÍ 10 (Chương trình GDPT mới 2018)</div>
+    <div style="font-size: 13.5px; color: #64748b; margin-top: 4px;">Thời gian làm bài: 45 phút (không kể thời gian phát đề) - Cấu trúc chuẩn theo đề mẫu 001</div>
+    
+    <div class="meta-row">
+      <div>Họ và tên học sinh: <input type="text" placeholder="Nhập tên học sinh..." style="width: 180px;"></div>
+      <div>Lớp: <input type="text" placeholder="10A..." style="width: 70px;"></div>
+      <div>Mã đề: <strong>002</strong></div>
+    </div>
+  </div>
+
+  <!-- Sticky Control Bar -->
+  <div class="control-bar">
+    <div class="timer-box">
+      <span>⏱ Thời gian còn lại:</span>
+      <span id="timerDisplay">45:00</span>
+    </div>
+    <div class="btn-group">
+      <button class="btn-primary" onclick="submitExam()">Nộp bài & Chấm điểm</button>
+      <button class="btn-outline" onclick="toggleAllSolutions()">Hiện toàn bộ lời giải</button>
+      <button class="btn-outline" onclick="resetExam()">Làm lại</button>
+    </div>
+  </div>
+
+  <!-- Score Board (Shown after submit) -->
+  <div id="scoreBox">
+    <h2>🎉 KẾT QUẢ BÀI LÀM</h2>
+    <div id="scoreDetails"></div>
+  </div>
+
+  <!-- ==================== PHẦN I ==================== -->
+  <div class="part-title">PHẦN I (3,0 điểm) - CÂU TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN</div>
+  <div class="part-desc">Thí sinh trả lời từ Câu 1 đến Câu 12. Mỗi câu hỏi chỉ chọn một phương án chính xác nhất. Mỗi câu đúng được 0,25 điểm.</div>
+
+  <!-- Câu 1 -->
+  <div class="question-card" id="q_mc_1">
+    <div class="q-title"><span class="badge">Câu 1</span>Trong các trường hợp sau đây, trường hợp nào vật <strong>không thể</strong> coi là chất điểm?</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_1" value="A"> A. Viên bi lăn trên quãng đường dài 20 m.</label>
+      <label class="opt-label"><input type="radio" name="mc_1" value="B"> B. Đoàn tàu hỏa dài 200 m đang chạy qua một cây cầu dài 100 m.</label>
+      <label class="opt-label"><input type="radio" name="mc_1" value="C"> C. Giọt nước mưa rơi tự do từ tầng 10 của tòa nhà xuống mặt đất.</label>
+      <label class="opt-label"><input type="radio" name="mc_1" value="D"> D. Trái Đất chuyển động trong quỹ đạo quay quanh Mặt Trời.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_1')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_1">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Một vật được coi là chất điểm khi kích thước của nó rất nhỏ so với quãng đường di chuyển hoặc khoảng cách đang xét.<br>
+      Đoàn tàu dài 200 m đi qua cầu dài 100 m có kích thước lớn hơn cả chiều dài cây cầu nên <strong>không thể</strong> coi là chất điểm.<br>
+      <strong>&rarr; Chọn B.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 2 -->
+  <div class="question-card" id="q_mc_2">
+    <div class="q-title"><span class="badge">Câu 2</span>Giai đoạn đầu tiên trong lịch sử phát triển của Vật lí học (thời kì Tiền vật lí) diễn ra trong khoảng thời gian nào?</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_2" value="A"> A. Từ năm 350 trước Công nguyên đến thế kỉ XVI.</label>
+      <label class="opt-label"><input type="radio" name="mc_2" value="B"> B. Từ thế kỉ XVII đến cuối thế kỉ XIX.</label>
+      <label class="opt-label"><input type="radio" name="mc_2" value="C"> C. Từ cuối thế kỉ XIX đến nay.</label>
+      <label class="opt-label"><input type="radio" name="mc_2" value="D"> D. Trước năm 1000 trước Công nguyên.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_2')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_2">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Thời kì Tiền vật lí diễn ra từ năm 350 TCN đến thế kỉ XVI. Ở giai đoạn này, các nhà triết học tìm hiểu thế giới tự nhiên chủ yếu bằng phương pháp quan sát và suy luận chủ quan.<br>
+      <strong>&rarr; Chọn A.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 3 -->
+  <div class="question-card" id="q_mc_3">
+    <div class="q-title"><span class="badge">Câu 3</span>Gia tốc trong chuyển động là đại lượng vật lí đặc trưng cho yếu tố nào sau đây?</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_3" value="A"> A. Độ dài quãng đường mà vật đi được trong một đơn vị thời gian.</label>
+      <label class="opt-label"><input type="radio" name="mc_3" value="B"> B. Mức độ chuyển động nhanh hay chậm của vật tại một vị trí.</label>
+      <label class="opt-label"><input type="radio" name="mc_3" value="C"> C. Sự thay đổi nhanh hay chậm của vận tốc theo thời gian.</label>
+      <label class="opt-label"><input type="radio" name="mc_3" value="D"> D. Tọa độ và hướng vị trí của vật trong không gian.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_3')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_3">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Gia tốc <i>a = &Delta;v / &Delta;t</i> là đại lượng vật lí đặc trưng cho sự biến thiên (thay đổi) nhanh hay chậm của vận tốc theo thời gian.<br>
+      <strong>&rarr; Chọn C.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 4 -->
+  <div class="question-card" id="q_mc_4">
+    <div class="q-title"><span class="badge">Câu 4</span>Đồ thị độ dịch chuyển – thời gian (<span class="math">d - t</span>) của một vật đứng yên tại chỗ theo thời gian có dạng là:</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_4" value="A"> A. Đường cong parabol hướng lõm lên trên.</label>
+      <label class="opt-label"><input type="radio" name="mc_4" value="B"> B. Đường thẳng xiên góc đi qua gốc tọa độ O.</label>
+      <label class="opt-label"><input type="radio" name="mc_4" value="C"> C. Đoạn thẳng song song với trục thời gian Ot.</label>
+      <label class="opt-label"><input type="radio" name="mc_4" value="D"> D. Đường hypebol cong tiệm cận các trục tọa độ.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_4')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_4">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Khi vật đứng yên, độ dịch chuyển <i>d</i> không đổi theo thời gian <i>t</i>, đồ thị biểu diễn là một đường thẳng song song với trục hoành (trục thời gian Ot).<br>
+      <strong>&rarr; Chọn C.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 5 -->
+  <div class="question-card" id="q_mc_5">
+    <div class="q-title"><span class="badge">Câu 5</span>Để đảm bảo an toàn tuyệt đối khi làm thí nghiệm trong phòng thực hành Vật lí, hành động nào sau đây là <strong>sai</strong>?</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_5" value="A"> A. Đọc kĩ hướng dẫn sử dụng và tuân thủ các quy tắc an toàn của giáo viên.</label>
+      <label class="opt-label"><input type="radio" name="mc_5" value="B"> B. Tự ý cắm trực tiếp phích cắm thiết bị vào nguồn 220 V khi chưa kiểm tra sơ đồ mạch.</label>
+      <label class="opt-label"><input type="radio" name="mc_5" value="C"> C. Ngắt ngay cầu dao hoặc công tắc chính khi xảy ra mùi khét hoặc chập điện.</label>
+      <label class="opt-label"><input type="radio" name="mc_5" value="D"> D. Vệ sinh dụng cụ và sắp xếp ngăn nắp thiết bị sau khi kết thúc buổi thực hành.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_5')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_5">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Tuyệt đối không tự ý cắm trực tiếp thiết bị điện vào nguồn điện xoay chiều 220 V mà không có sự kiểm tra và cho phép của giáo viên vì có thể gây giật điện và cháy nổ nguy hiểm.<br>
+      <strong>&rarr; Chọn B.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 6 -->
+  <div class="question-card" id="q_mc_6">
+    <div class="q-title"><span class="badge">Câu 6</span>Dùng thước kẹp có độ chia nhỏ nhất 0,1 mm để đo đường kính ngoài của ống trụ, một học sinh ghi kết quả là <span class="math">d = (16,4 &plusmn; 0,1) mm</span>. Sai số tuyệt đối của phép đo này bằng:</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_6" value="A"> A. 16,4 mm.</label>
+      <label class="opt-label"><input type="radio" name="mc_6" value="B"> B. 0,1 mm.</label>
+      <label class="opt-label"><input type="radio" name="mc_6" value="C"> C. 16,5 mm.</label>
+      <label class="opt-label"><input type="radio" name="mc_6" value="D"> D. 0,05 mm.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_6')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_6">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Kết quả đo được biểu diễn dưới dạng: <i>A = Ā &plusmn; &Delta;A</i>, trong đó <i>&Delta;A</i> là sai số tuyệt đối của phép đo.<br>
+      Ở đây <i>&Delta;d = 0,1 mm</i>.<br>
+      <strong>&rarr; Chọn B.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 7 -->
+  <div class="question-card" id="q_mc_7">
+    <div class="q-title"><span class="badge">Câu 7</span>Một vận động viên bơi lội bơi thẳng hết chiều dài bể bơi 100 m trong thời gian 50 s. Tốc độ trung bình của vận động viên là:</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_7" value="A"> A. 2,0 m/s.</label>
+      <label class="opt-label"><input type="radio" name="mc_7" value="B"> B. 5,0 m/s.</label>
+      <label class="opt-label"><input type="radio" name="mc_7" value="C"> C. 0,5 m/s.</label>
+      <label class="opt-label"><input type="radio" name="mc_7" value="D"> D. 2,5 m/s.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_7')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_7">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Tốc độ trung bình: <i>v<sub>tb</sub> = s / t = 100 / 50 = 2,0 m/s</i>.<br>
+      <strong>&rarr; Chọn A.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 8 -->
+  <div class="question-card" id="q_mc_8">
+    <div class="q-title"><span class="badge">Câu 8</span>Với chiều dương là chiều chuyển động, một chất điểm chuyển động thẳng <strong>chậm dần đều</strong> có dấu của vận tốc <span class="math">v</span> và gia tốc <span class="math">a</span> thỏa mãn:</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_8" value="A"> A. v &gt; 0 và a &gt; 0.</label>
+      <label class="opt-label"><input type="radio" name="mc_8" value="B"> B. v &gt; 0 và a &lt; 0.</label>
+      <label class="opt-label"><input type="radio" name="mc_8" value="C"> C. v &lt; 0 và a &gt; 0.</label>
+      <label class="opt-label"><input type="radio" name="mc_8" value="D"> D. v &gt; 0 và a = 0.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_8')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_8">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      - Do chọn chiều dương là chiều chuyển động nên <i>v &gt; 0</i>.<br>
+      - Chuyển động chậm dần đều thì vectơ gia tốc ngược hướng vectơ vận tốc (tích <i>a &middot; v &lt; 0</i>).<br>
+      Do đó <i>a &lt; 0</i>.<br>
+      <strong>&rarr; Chọn B.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 9 -->
+  <div class="question-card" id="q_mc_9">
+    <div class="q-title"><span class="badge">Câu 9</span>Đối tượng nghiên cứu cốt lõi của môn Vật lí là:</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_9" value="A"> A. Các quy luật phát triển kinh tế và cấu trúc quan hệ xã hội.</label>
+      <label class="opt-label"><input type="radio" name="mc_9" value="B"> B. Các dạng vận động của vật chất và năng lượng trong tự nhiên.</label>
+      <label class="opt-label"><input type="radio" name="mc_9" value="C"> C. Sự hình thành địa chất các mỏ khoáng sản dưới lòng đất.</label>
+      <label class="opt-label"><input type="radio" name="mc_9" value="D"> D. Quá trình quang hợp và sinh trưởng của thực vật.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_9')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_9">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Đối tượng nghiên cứu của Vật lí học tập trung vào các dạng vận động của vật chất (cơ học, nhiệt học, điện - từ, quang học, nguyên tử hạt nhân...) và năng lượng.<br>
+      <strong>&rarr; Chọn B.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 10 -->
+  <div class="question-card" id="q_mc_10">
+    <div class="q-title"><span class="badge">Câu 10</span>Kí hiệu <strong>AC</strong> hoặc dấu ngã (<strong>~</strong>) trên các cổng cắm của bộ nguồn điện mang ý nghĩa:</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_10" value="A"> A. Ngõ ra cung cấp dòng điện một chiều cố định cực tính.</label>
+      <label class="opt-label"><input type="radio" name="mc_10" value="B"> B. Ngõ ra cung cấp dòng điện xoay chiều.</label>
+      <label class="opt-label"><input type="radio" name="mc_10" value="C"> C. Cổng tiếp đất an toàn chống sét.</label>
+      <label class="opt-label"><input type="radio" name="mc_10" value="D"> D. Cực âm của nguồn pin sạc.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_10')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_10">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Kí hiệu AC (Alternating Current) hoặc dấu ngã "~" biểu thị nguồn điện xoay chiều. (DC hoặc dấu "-" biểu thị dòng điện một chiều).<br>
+      <strong>&rarr; Chọn B.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 11 -->
+  <div class="question-card" id="q_mc_11">
+    <div class="q-title"><span class="badge">Câu 11</span>Loại sai số có nguyên nhân không rõ ràng, có thể do thao tác đo của mắt nhìn không chuẩn xác giữa các lần đo hoặc do dao động vi khí hậu trong phòng thí nghiệm được gọi là:</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_11" value="A"> A. Sai số dụng cụ.</label>
+      <label class="opt-label"><input type="radio" name="mc_11" value="B"> B. Sai số ngẫu nhiên.</label>
+      <label class="opt-label"><input type="radio" name="mc_11" value="C"> C. Sai số hệ thống cố định.</label>
+      <label class="opt-label"><input type="radio" name="mc_11" value="D"> D. Sai số tỉ đối định mức.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_11')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_11">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Sai số ngẫu nhiên là sai số xuất phát từ những tác động ngẫu nhiên bên ngoài hoặc hạn chế nhất thời về giác quan con người, không có tính quy luật cố định.<br>
+      <strong>&rarr; Chọn B.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 12 -->
+  <div class="question-card" id="q_mc_12">
+    <div class="q-title"><span class="badge">Câu 12</span>Để đo thời gian chuyển động của một vật nhỏ đi qua hai vị trí một cách chính xác trong phòng thí nghiệm, bộ dụng cụ tối ưu nhất là:</div>
+    <div class="options-grid">
+      <label class="opt-label"><input type="radio" name="mc_12" value="A"> A. Máy sấy tóc và nhiệt kế thủy ngân.</label>
+      <label class="opt-label"><input type="radio" name="mc_12" value="B"> B. Cổng quang điện kết hợp đồng hồ đo thời gian hiện số.</label>
+      <label class="opt-label"><input type="radio" name="mc_12" value="C"> C. Đồng hồ bấm giây cơ học dùng ngón tay ấn nút.</label>
+      <label class="opt-label"><input type="radio" name="mc_12" value="D"> D. Lực kế lò xo và cân đòn.</label>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_mc_12')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_mc_12">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Cổng quang điện kết hợp đồng hồ hiện số tự động ngắt/mở mạch cảm biến ánh sáng, giúp đo thời gian chính xác tới phần nghìn giây và triệt tiêu phản xạ bấm tay.<br>
+      <strong>&rarr; Chọn B.</strong>
+    </div>
+  </div>
+
+
+  <!-- ==================== PHẦN II ==================== -->
+  <div class="part-title">PHẦN II (2,0 điểm) - CÂU TRẮC NGHIỆM ĐÚNG / SAI</div>
+  <div class="part-desc">Thí sinh trả lời Câu 1 và Câu 2. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn Đúng (Đ) hoặc Sai (S).</div>
+
+  <!-- Câu 1 Phần II: Có đồ thị d-t -->
+  <div class="question-card" id="q_tf_1">
+    <div class="q-title"><span class="badge">Câu 1</span>Một vật chuyển động trên một đường thẳng có đồ thị độ dịch chuyển – thời gian (<span class="math">d - t</span>) như hình vẽ bên dưới:</div>
+    
+    <div style="text-align: center;">
+      <div class="graph-container">
+        <!-- SVG Đồ thị mới d-t: 0->3s lên 12m, 3->5s về 6m -->
+        <svg width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" style="background:#fff;">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+            </marker>
+          </defs>
+          <!-- Grid lines -->
+          <g stroke="#e2e8f0" stroke-width="1">
+            <line x1="60" y1="50" x2="360" y2="50"/>
+            <line x1="60" y1="90" x2="360" y2="90"/>
+            <line x1="60" y1="130" x2="360" y2="130"/>
+            <line x1="60" y1="170" x2="360" y2="170"/>
+            <line x1="120" y1="30" x2="120" y2="210"/>
+            <line x1="180" y1="30" x2="180" y2="210"/>
+            <line x1="240" y1="30" x2="240" y2="210"/>
+            <line x1="300" y1="30" x2="300" y2="210"/>
+            <line x1="360" y1="30" x2="360" y2="210"/>
+          </g>
+          <!-- Axes -->
+          <line x1="60" y1="210" x2="380" y2="210" stroke="#1e293b" stroke-width="2" marker-end="url(#arrow)"/>
+          <line x1="60" y1="210" x2="60" y2="20" stroke="#1e293b" stroke-width="2" marker-end="url(#arrow)"/>
+          
+          <text x="385" y="215" font-size="13" font-weight="bold" fill="#1e293b">t (s)</text>
+          <text x="35" y="25" font-size="13" font-weight="bold" fill="#1e293b">d (m)</text>
+          <text x="45" y="225" font-size="13" fill="#64748b">O</text>
+          
+          <!-- Ticks t-axis -->
+          <text x="117" y="227" font-size="12" fill="#334155">1</text>
+          <text x="177" y="227" font-size="12" fill="#334155">2</text>
+          <text x="237" y="227" font-size="12" fill="#334155">3</text>
+          <text x="297" y="227" font-size="12" fill="#334155">4</text>
+          <text x="357" y="227" font-size="12" fill="#334155">5</text>
+          
+          <!-- Ticks d-axis -->
+          <text x="35" y="134" font-size="12" fill="#334155">6</text>
+          <text x="28" y="54" font-size="12" fill="#334155">12</text>
+          
+          <!-- Dashed lines -->
+          <line x1="240" y1="210" x2="240" y2="50" stroke="#94a3b8" stroke-dasharray="4,4"/>
+          <line x1="60" y1="50" x2="240" y2="50" stroke="#94a3b8" stroke-dasharray="4,4"/>
+          
+          <line x1="360" y1="210" x2="360" y2="130" stroke="#94a3b8" stroke-dasharray="4,4"/>
+          <line x1="60" y1="130" x2="360" y2="130" stroke="#94a3b8" stroke-dasharray="4,4"/>
+          
+          <!-- Graph Line -->
+          <polyline points="60,210 240,50 360,130" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          
+          <!-- Dots at key points -->
+          <circle cx="60" cy="210" r="4" fill="#2563eb"/>
+          <circle cx="240" cy="50" r="5" fill="#dc2626"/>
+          <circle cx="360" cy="130" r="5" fill="#dc2626"/>
+        </svg>
+        <div class="graph-caption">Hình 1. Đồ thị độ dịch chuyển – thời gian (d – t)</div>
+      </div>
+    </div>
+
+    <table class="tf-table">
+      <thead>
+        <tr>
+          <th>Phát biểu</th>
+          <th style="width: 75px;">Đúng</th>
+          <th style="width: 75px;">Sai</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>a) Trong 3 giây đầu tiên, vật chuyển động thẳng đều với vận tốc có độ lớn là 4 m/s.</td>
+          <td class="tf-check"><input type="radio" name="tf_1_a" value="T"></td>
+          <td class="tf-check"><input type="radio" name="tf_1_a" value="F"></td>
+        </tr>
+        <tr>
+          <td>b) Trong khoảng thời gian từ t = 3 s đến t = 5 s, vật tiếp tục chuyển động cùng chiều với ban đầu.</td>
+          <td class="tf-check"><input type="radio" name="tf_1_b" value="T"></td>
+          <td class="tf-check"><input type="radio" name="tf_1_b" value="F"></td>
+        </tr>
+        <tr>
+          <td>c) Quãng đường mà vật đi được trong toàn bộ 5 giây chuyển động là 18 m.</td>
+          <td class="tf-check"><input type="radio" name="tf_1_c" value="T"></td>
+          <td class="tf-check"><input type="radio" name="tf_1_c" value="F"></td>
+        </tr>
+        <tr>
+          <td>d) Độ dịch chuyển của vật sau cả quá trình 5 giây là 18 m.</td>
+          <td class="tf-check"><input type="radio" name="tf_1_d" value="T"></td>
+          <td class="tf-check"><input type="radio" name="tf_1_d" value="F"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button class="solution-btn" onclick="toggleSol('sol_tf_1')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_tf_1">
+      <strong class="hd">Hướng dẫn giải Câu 1:</strong>
+      • <strong>a) ĐÚNG:</strong> Vận tốc trong 3 giây đầu: <i>v<sub>1</sub> = (12 - 0) / (3 - 0) = 4 m/s</i>.<br>
+      • <strong>b) SAI:</strong> Từ 3s đến 5s, độ dịch chuyển giảm từ 12 m xuống 6 m, nghĩa là vật đã quay đầu chuyển động ngược chiều dương (vận tốc <i>v<sub>2</sub> = (6 - 12) / (5 - 3) = -3 m/s</i>).<br>
+      • <strong>c) ĐÚNG:</strong> Quãng đường tổng cộng vật đi được: <i>s = s<sub>1</sub> + s<sub>2</sub> = 12 m + |6 - 12| m = 12 + 6 = 18 m</i>.<br>
+      • <strong>d) SAI:</strong> Độ dịch chuyển bằng hiệu tọa độ cuối và tọa độ đầu: <i>d = d(5) - d(0) = 6 - 0 = 6 m</i> (không phải 18 m).<br>
+      <strong>&rarr; Đáp án: a - Đ, b - S, c - Đ, d - S.</strong>
+    </div>
+  </div>
+
+  <!-- Câu 2 Phần II -->
+  <div class="question-card" id="q_tf_2">
+    <div class="q-title"><span class="badge">Câu 2</span>Xét tính đúng / sai của các nhận định dưới đây về phương pháp nghiên cứu và quy tắc an toàn trong Vật lí:</div>
+    <table class="tf-table">
+      <thead>
+        <tr>
+          <th>Phát biểu</th>
+          <th style="width: 75px;">Đúng</th>
+          <th style="width: 75px;">Sai</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>a) Phương pháp thực nghiệm dùng thí nghiệm để phát hiện kết quả mới giúp kiểm chứng, hoàn thiện hoặc bác bỏ giả thuyết khoa học.</td>
+          <td class="tf-check"><input type="radio" name="tf_2_a" value="T"></td>
+          <td class="tf-check"><input type="radio" name="tf_2_a" value="F"></td>
+        </tr>
+        <tr>
+          <td>b) Khi phát hiện cháy nổ do chập đường dây điện trong phòng thí nghiệm, cần nhanh chóng dùng nước tạt vào đám cháy để dập lửa ngay.</td>
+          <td class="tf-check"><input type="radio" name="tf_2_b" value="T"></td>
+          <td class="tf-check"><input type="radio" name="tf_2_b" value="F"></td>
+        </tr>
+        <tr>
+          <td>c) Cuộc cách mạng công nghiệp lần thứ tư (4.0) gắn liền với sự bùng nổ của Internet vạn vật (IoT), trí tuệ nhân tạo (AI) và thiết bị thông minh.</td>
+          <td class="tf-check"><input type="radio" name="tf_2_c" value="T"></td>
+          <td class="tf-check"><input type="radio" name="tf_2_c" value="F"></td>
+        </tr>
+        <tr>
+          <td>d) Sai số hệ thống là loại sai số xuất hiện ngẫu nhiên, không có tính quy luật lặp lại ở các lần đo liên tiếp.</td>
+          <td class="tf-check"><input type="radio" name="tf_2_d" value="T"></td>
+          <td class="tf-check"><input type="radio" name="tf_2_d" value="F"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button class="solution-btn" onclick="toggleSol('sol_tf_2')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_tf_2">
+      <strong class="hd">Hướng dẫn giải Câu 2:</strong>
+      • <strong>a) ĐÚNG:</strong> Đây là định nghĩa và vai trò chuẩn xác của phương pháp thực nghiệm trong nghiên cứu Vật lí.<br>
+      • <strong>b) SAI:</strong> Nước dẫn điện, dùng nước dập đám cháy chập điện gây phóng điện nguy hiểm đến tính mạng. Cần lập tức ngắt cầu dao tổng và sử dụng bình chữa cháy chuyên dụng (CO2, bột).<br>
+      • <strong>c) ĐÚNG:</strong> Cách mạng công nghiệp 4.0 đặc trưng bởi IoT, AI, Big Data và công nghệ tự động hóa.<br>
+      • <strong>d) SAI:</strong> Sai số hệ thống luôn có tính quy luật và lặp lại cố định ở các lần đo (do dụng cụ lệch vạch số 0). Sai số ngẫu nhiên mới không có tính quy luật.<br>
+      <strong>&rarr; Đáp án: a - Đ, b - S, c - Đ, d - S.</strong>
+    </div>
+  </div>
+
+
+  <!-- ==================== PHẦN III ==================== -->
+  <div class="part-title">PHẦN III (2,0 điểm) - CÂU TRẮC NGHIỆM TRẢ LỜI NGẮN</div>
+  <div class="part-desc">Thí sinh trả lời từ Câu 1 đến Câu 8. Nhập đáp số dạng số (nguyên hoặc số thập phân) vào ô trống. Mỗi câu đúng được 0,25 điểm.</div>
+
+  <!-- Câu 1 Phần III -->
+  <div class="question-card" id="q_sa_1">
+    <div class="q-title"><span class="badge">Câu 1</span>Một ô tô đang chuyển động với vận tốc ban đầu <span class="math">v<sub>0</sub> = 36 km/h</span> thì tăng ga chuyển động thẳng nhanh dần đều. Biết trong giây thứ 5 (từ thời điểm <span class="math">t = 4 s</span> đến <span class="math">t = 5 s</span>), ô tô đi được quãng đường là <span class="math">14,5 m</span>. Gia tốc của xe bằng bao nhiêu m/s<sup>2</sup>?</div>
+    <div class="short-input-box">
+      <span>Đáp số:</span>
+      <input type="text" id="sa_1" placeholder="Nhập số...">
+      <span class="unit-label">m/s<sup>2</sup></span>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_sa_1')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_sa_1">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Đổi vận tốc ban đầu: <i>v<sub>0</sub> = 36 km/h = 10 m/s</i>.<br>
+      Quãng đường đi trong 5 giây đầu: <i>s<sub>5</sub> = 10 &middot; 5 + 0,5 &middot; a &middot; 5<sup>2</sup> = 50 + 12,5a</i>.<br>
+      Quãng đường đi trong 4 giây đầu: <i>s<sub>4</sub> = 10 &middot; 4 + 0,5 &middot; a &middot; 4<sup>2</sup> = 40 + 8a</i>.<br>
+      Quãng đường đi trong giây thứ 5: <i>&Delta;s<sub>5</sub> = s<sub>5</sub> - s<sub>4</sub> = 10 + 4,5a = 14,5 &rArr; 4,5a = 4,5 &rArr; a = 1 m/s<sup>2</sup></i>.<br>
+      <strong>&rarr; Đáp số: 1</strong>
+    </div>
+  </div>
+
+  <!-- Câu 2 Phần III -->
+  <div class="question-card" id="q_sa_2">
+    <div class="q-title"><span class="badge">Câu 2</span>Một xe máy bắt đầu khởi hành chuyển động thẳng nhanh dần đều từ trạng thái nghỉ (<span class="math">v<sub>0</sub> = 0</span>). Sau khi đi được quãng đường 40 m đầu tiên, xe đạt vận tốc là 4 m/s. Hỏi sau khi đi thêm được 120 m tiếp theo (tổng quãng đường 160 m), vận tốc của xe là bao nhiêu m/s?</div>
+    <div class="short-input-box">
+      <span>Đáp số:</span>
+      <input type="text" id="sa_2" placeholder="Nhập số...">
+      <span class="unit-label">m/s</span>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_sa_2')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_sa_2">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Áp dụng hệ thức độc lập thời gian: <i>v<sub>1</sub><sup>2</sup> - v<sub>0</sub><sup>2</sup> = 2as<sub>1</sub> &rArr; 4<sup>2</sup> = 2a &middot; 40 &rArr; a = 16 / 80 = 0,2 m/s<sup>2</sup></i>.<br>
+      Khi đi thêm 120 m nữa, tổng quãng đường đi được: <i>s<sub>2</sub> = 40 + 120 = 160 m</i>.<br>
+      Vận tốc đạt được: <i>v<sub>2</sub><sup>2</sup> = 2as<sub>2</sub> = 2 &middot; 0,2 &middot; 160 = 64 &rArr; v<sub>2</sub> = &radic;64 = 8 m/s</i>.<br>
+      <strong>&rarr; Đáp số: 8</strong>
+    </div>
+  </div>
+
+  <!-- Câu 3 Phần III -->
+  <div class="question-card" id="q_sa_3">
+    <div class="q-title"><span class="badge">Câu 3</span>Một chiếc xuồng máy muốn vượt qua một con sông rộng 60 m theo hướng vuông góc với bờ. Do dòng nước chảy xuôi dòng nên chiếc xuồng bị trôi dạt và quãng đường thực tế xuồng đi được gấp 2,5 lần chiều rộng con sông. Vị trí xuồng cập bờ cách điểm đối diện với điểm xuất phát một khoảng bằng bao nhiêu mét? (Làm tròn kết quả đến hàng đơn vị).</div>
+    <div class="short-input-box">
+      <span>Đáp số:</span>
+      <input type="text" id="sa_3" placeholder="Nhập số...">
+      <span class="unit-label">m</span>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_sa_3')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_sa_3">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Bề rộng con sông: <i>d = 60 m</i>.<br>
+      Quãng đường thực tế xuồng đi: <i>s = 2,5 &times; 60 = 150 m</i>.<br>
+      Tam giác vuông tạo bởi bề rộng sông <i>d</i>, độ dạt xuôi dòng <i>x</i> và quãng đường <i>s</i>:<br>
+      <i>s<sup>2</sup> = d<sup>2</sup> + x<sup>2</sup> &rArr; x = &radic;(150<sup>2</sup> - 60<sup>2</sup>) = &radic;(22500 - 3600) = &radic;18900 &approx; 137,48 m &approx; 137 m</i>.<br>
+      <strong>&rarr; Đáp số: 137</strong>
+    </div>
+  </div>
+
+  <!-- Câu 4 Phần III: Đồ thị d-t -->
+  <div class="question-card" id="q_sa_4">
+    <div class="q-title"><span class="badge">Câu 4</span>Hình 2 là đồ thị độ dịch chuyển – thời gian (<span class="math">d - t</span>) của một vật chuyển động thẳng đều. Biết điểm A có tọa độ <span class="math">(1 h; 20 km)</span> và điểm B có tọa độ <span class="math">(4 h; 140 km)</span>. Vận tốc chuyển động của vật bằng bao nhiêu km/h?</div>
+    
+    <div style="text-align: center;">
+      <div class="graph-container">
+        <!-- SVG Đồ thị mới d-t: A(1, 20), B(4, 140) -->
+        <svg width="400" height="260" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" style="background:#fff;">
+          <defs>
+            <marker id="arrow2" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+            </marker>
+          </defs>
+          <g stroke="#e2e8f0" stroke-width="1">
+            <line x1="60" y1="50" x2="360" y2="50"/>
+            <line x1="60" y1="90" x2="360" y2="90"/>
+            <line x1="60" y1="130" x2="360" y2="130"/>
+            <line x1="60" y1="170" x2="360" y2="170"/>
+            <line x1="120" y1="30" x2="120" y2="210"/>
+            <line x1="180" y1="30" x2="180" y2="210"/>
+            <line x1="240" y1="30" x2="240" y2="210"/>
+            <line x1="300" y1="30" x2="300" y2="210"/>
+          </g>
+          <!-- Axes -->
+          <line x1="60" y1="210" x2="380" y2="210" stroke="#1e293b" stroke-width="2" marker-end="url(#arrow2)"/>
+          <line x1="60" y1="210" x2="60" y2="20" stroke="#1e293b" stroke-width="2" marker-end="url(#arrow2)"/>
+          
+          <text x="382" y="215" font-size="13" font-weight="bold" fill="#1e293b">t (h)</text>
+          <text x="25" y="25" font-size="13" font-weight="bold" fill="#1e293b">d (km)</text>
+          <text x="45" y="225" font-size="13" fill="#64748b">O</text>
+          
+          <!-- Ticks t-axis -->
+          <text x="117" y="227" font-size="12" fill="#334155">1</text>
+          <text x="177" y="227" font-size="12" fill="#334155">2</text>
+          <text x="237" y="227" font-size="12" fill="#334155">3</text>
+          <text x="297" y="227" font-size="12" fill="#334155">4</text>
+          <text x="357" y="227" font-size="12" fill="#334155">5</text>
+          
+          <!-- Ticks d-axis -->
+          <text x="32" y="189" font-size="12" fill="#334155">20</text>
+          <text x="25" y="69" font-size="12" fill="#334155">140</text>
+          
+          <!-- Dashed lines for A(120, 185) -->
+          <line x1="120" y1="210" x2="120" y2="185" stroke="#94a3b8" stroke-dasharray="4,4"/>
+          <line x1="60" y1="185" x2="120" y2="185" stroke="#94a3b8" stroke-dasharray="4,4"/>
+          
+          <!-- Dashed lines for B(300, 65) -->
+          <line x1="300" y1="210" x2="300" y2="65" stroke="#94a3b8" stroke-dasharray="4,4"/>
+          <line x1="60" y1="65" x2="300" y2="65" stroke="#94a3b8" stroke-dasharray="4,4"/>
+          
+          <!-- Graph Line passing through A and B -->
+          <line x1="60" y1="225" x2="350" y2="32" stroke="#2563eb" stroke-width="3"/>
+          
+          <circle cx="120" cy="185" r="5" fill="#dc2626"/>
+          <text x="125" y="180" font-size="13" font-weight="bold" fill="#dc2626">A</text>
+          
+          <circle cx="300" cy="65" r="5" fill="#dc2626"/>
+          <text x="305" y="60" font-size="13" font-weight="bold" fill="#dc2626">B</text>
+        </svg>
+        <div class="graph-caption">Hình 2. Đồ thị chuyển động thẳng đều d – t</div>
+      </div>
+    </div>
+
+    <div class="short-input-box">
+      <span>Đáp số:</span>
+      <input type="text" id="sa_4" placeholder="Nhập số...">
+      <span class="unit-label">km/h</span>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_sa_4')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_sa_4">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Vận tốc chuyển động thẳng đều bằng hệ số góc của đường biểu diễn <i>d - t</i>:<br>
+      <i>v = (d<sub>B</sub> - d<sub>A</sub>) / (t<sub>B</sub> - t<sub>A</sub>) = (140 - 20) / (4 - 1) = 120 / 3 = 40 km/h</i>.<br>
+      <strong>&rarr; Đáp số: 40</strong>
+    </div>
+  </div>
+
+  <!-- Câu 5 Phần III -->
+  <div class="question-card" id="q_sa_5">
+    <div class="q-title"><span class="badge">Câu 5</span>Một đầu tàu hỏa bắt đầu rời khỏi ga chuyển động thẳng nhanh dần đều với gia tốc <span class="math">a = 0,25 m/s<sup>2</sup></span>. Khoảng thời gian để đoàn tàu đạt được tốc độ <span class="math">54 km/h</span> là bao nhiêu phút?</div>
+    <div class="short-input-box">
+      <span>Đáp số:</span>
+      <input type="text" id="sa_5" placeholder="Nhập số...">
+      <span class="unit-label">phút</span>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_sa_5')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_sa_5">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Đổi vận tốc: <i>v = 54 km/h = 15 m/s</i>. Đoàn tàu rời ga từ trạng thái nghỉ nên <i>v<sub>0</sub> = 0</i>.<br>
+      Thời gian chuyển động: <i>t = (v - v<sub>0</sub>) / a = (15 - 0) / 0,25 = 60 s</i>.<br>
+      Đổi sang phút: <i>60 s = 1 phút</i>.<br>
+      <strong>&rarr; Đáp số: 1</strong>
+    </div>
+  </div>
+
+  <!-- Câu 6 Phần III -->
+  <div class="question-card" id="q_sa_6">
+    <div class="q-title"><span class="badge">Câu 6</span>Một bạn học sinh đi xe đạp từ nhà đến hiệu sách cách nhà 1200 m trên một đường thẳng. Sau đó, bạn quay xe ngược lại và ghé vào nhà bạn cùng lớp cách nhà 700 m (ngôi nhà này nằm trên cùng đoạn đường từ nhà đến hiệu sách). Độ dịch chuyển của bạn học sinh sau toàn bộ hành trình bằng bao nhiêu mét?</div>
+    <div class="short-input-box">
+      <span>Đáp số:</span>
+      <input type="text" id="sa_6" placeholder="Nhập số...">
+      <span class="unit-label">m</span>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_sa_6')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_sa_6">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Chọn mốc tọa độ tại nhà học sinh, chiều dương hướng từ nhà đến hiệu sách.<br>
+      Tọa độ điểm đầu: <i>x<sub>1</sub> = 0</i>.<br>
+      Tọa độ điểm kết thúc (nhà bạn cùng lớp): <i>x<sub>2</sub> = 700 m</i>.<br>
+      Độ dịch chuyển tổng cộng: <i>d = x<sub>2</sub> - x<sub>1</sub> = 700 - 0 = 700 m</i> (Độ dịch chuyển chỉ phụ thuộc điểm đầu và điểm cuối).<br>
+      <strong>&rarr; Đáp số: 700</strong>
+    </div>
+  </div>
+
+  <!-- Câu 7 Phần III -->
+  <div class="question-card" id="q_sa_7">
+    <div class="q-title"><span class="badge">Câu 7</span>Phương trình độ dịch chuyển của một chất điểm chuyển động thẳng có dạng: <span class="math">d = 15t - 20</span> (với <span class="math">d</span> tính bằng mét, <span class="math">t</span> tính bằng giây). Vận tốc của chất điểm có giá trị bằng bao nhiêu theo đơn vị km/h?</div>
+    <div class="short-input-box">
+      <span>Đáp số:</span>
+      <input type="text" id="sa_7" placeholder="Nhập số...">
+      <span class="unit-label">km/h</span>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_sa_7')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_sa_7">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Từ phương trình độ dịch chuyển thẳng đều: <i>d = d<sub>0</sub> + vt &rArr; v = 15 m/s</i>.<br>
+      Đổi sang km/h: <i>v = 15 &times; 3,6 = 54 km/h</i>.<br>
+      <strong>&rarr; Đáp số: 54</strong>
+    </div>
+  </div>
+
+  <!-- Câu 8 Phần III -->
+  <div class="question-card" id="q_sa_8">
+    <div class="q-title"><span class="badge">Câu 8</span>Một chuyến bay chở khách bay từ Hà Nội vào Đà Nẵng với quãng đường 650 km trong thời gian 1 giờ 15 phút. Một đoàn tàu hỏa chạy tuyến Hà Nội – Đà Nẵng trên đường sắt dài 780 km hết thời gian 15 giờ. Gọi <span class="math">v<sub>1</sub></span> là tốc độ trung bình của máy bay và <span class="math">v<sub>2</sub></span> là tốc độ trung bình của tàu hỏa. Hãy tính tỉ số <span class="math">v<sub>1</sub> / v<sub>2</sub></span>.</div>
+    <div class="short-input-box">
+      <span>Đáp số:</span>
+      <input type="text" id="sa_8" placeholder="Nhập số...">
+      <span class="unit-label">(lần)</span>
+    </div>
+    <button class="solution-btn" onclick="toggleSol('sol_sa_8')">💡 Xem hướng dẫn giải</button>
+    <div class="solution-box" id="sol_sa_8">
+      <strong class="hd">Hướng dẫn giải:</strong>
+      Đổi thời gian bay: <i>1 h 15 phút = 1,25 h</i>.<br>
+      Tốc độ trung bình của máy bay: <i>v<sub>1</sub> = 650 / 1,25 = 520 km/h</i>.<br>
+      Tốc độ trung bình của đoàn tàu: <i>v<sub>2</sub> = 780 / 15 = 52 km/h</i>.<br>
+      Tỉ số: <i>v<sub>1</sub> / v<sub>2</sub> = 520 / 52 = 10</i>.<br>
+      <strong>&rarr; Đáp số: 10</strong>
+    </div>
+  </div>
+
+
+  <!-- ==================== PHẦN IV / TỰ LUẬN ==================== -->
+  <div class="part-title">PHẦN IV (3,0 điểm) - TỰ LUẬN</div>
+  <div class="part-desc">Thí sinh trình bày chi tiết các bước giải bài toán ra giấy nháp/vở, sau đó bấm xem hướng dẫn giải chi tiết để đối chiếu kết quả.</div>
+
+  <!-- Bài 1 Tự luận -->
+  <div class="question-card">
+    <div class="q-title"><span class="badge">Bài 1 (1,5 điểm)</span>Một chiếc ô tô xuất phát từ địa điểm A lúc 7 giờ sáng, chuyển động thẳng đều tới địa điểm B cách A 150 km. Xe tới B lúc 9 giờ 30 phút. Sau khi dừng nghỉ 30 phút tại B, ô tô quay đầu chạy ngược về A với tốc độ đều không đổi là 50 km/h.</div>
+    <div style="margin-left: 20px; font-size: 14.5px; line-height: 1.8;">
+      <strong>a)</strong> Lúc mấy giờ ô tô sẽ về lại điểm A?<br>
+      <strong>b)</strong> Tính tốc độ trung bình của ô tô trong toàn bộ thời gian xe chuyển động (không tính thời gian dừng nghỉ).<br>
+      <strong>c)</strong> Tính vận tốc trung bình của ô tô từ lúc 7 giờ sáng xuất phát đến lúc về lại A.
+    </div>
+
+    <button class="solution-btn" onclick="toggleSol('sol_tl_1')">💡 Xem hướng dẫn giải chi tiết</button>
+    <div class="solution-box" id="sol_tl_1">
+      <strong class="hd">Hướng dẫn giải chi tiết Bài 1:</strong>
+      <strong>a) Xác định thời điểm xe về đến A:</strong><br>
+      - Thời gian ô tô chạy từ B về A: <i>t<sub>2</sub> = s / v<sub>2</sub> = 150 / 50 = 3 giờ</i>.<br>
+      - Xe đến B lúc 9h30, nghỉ 30 phút đến 10h00 mới bắt đầu chạy về A.<br>
+      - Thời điểm ô tô về lại A: <i>10h00 + 3h00 = 13h00</i> (tức 13 giờ chiều).<br><br>
+      
+      <strong>b) Tính tốc độ trung bình trên toàn bộ thời gian chuyển động:</strong><br>
+      - Thời gian đi từ A đến B: <i>t<sub>1</sub> = 9h30 - 7h00 = 2,5 giờ</i>.<br>
+      - Tổng quãng đường xe đã đi: <i>s<sub>tổng</sub> = s<sub>AB</sub> + s<sub>BA</sub> = 150 + 150 = 300 km</i>.<br>
+      - Tổng thời gian xe thực sự chuyển động: <i>t<sub>cđ</sub> = t<sub>1</sub> + t<sub>2</sub> = 2,5 + 3 = 5,5 giờ</i>.<br>
+      - Tốc độ trung bình: <i>v<sub>tb</sub> = s<sub>tổng</sub> / t<sub>cđ</sub> = 300 / 5,5 &approx; 54,55 km/h</i>.<br><br>
+
+      <strong>c) Tính vận tốc trung bình từ lúc 7h đến lúc về A:</strong><br>
+      - Vì điểm xuất phát là A và điểm kết thúc hành trình cũng là A nên độ dịch chuyển tổng cộng của ô tô là:<br>
+      <i>d = x<sub>cuối</sub> - x<sub>đầu</sub> = 0 km</i>.<br>
+      - Vận tốc trung bình: <i>v = d / &Delta;t = 0 / 6 = 0 km/h</i>.
+    </div>
+  </div>
+
+  <!-- Bài 2 Tự luận -->
+  <div class="question-card">
+    <div class="q-title"><span class="badge">Bài 2 (1,5 điểm)</span>Một ô tô đang chuyển động thẳng đều với vận tốc 72 km/h thì tài xế phát hiện chướng ngại vật phía trước, lập tức đạp phanh chuyển động chậm dần đều và dừng lại hẳn sau 10 giây.</div>
+    <div style="margin-left: 20px; font-size: 14.5px; line-height: 1.8;">
+      <strong>a)</strong> Xác định gia tốc của xe trong suốt quá trình hãm phanh.<br>
+      <strong>b)</strong> Tính vận tốc của ô tô sau khi hãm phanh được 4 giây.<br>
+      <strong>c)</strong> Tính quãng đường ô tô đi được trong 2 giây cuối cùng trước khi dừng hẳn.
+    </div>
+
+    <button class="solution-btn" onclick="toggleSol('sol_tl_2')">💡 Xem hướng dẫn giải chi tiết</button>
+    <div class="solution-box" id="sol_tl_2">
+      <strong class="hd">Hướng dẫn giải chi tiết Bài 2:</strong>
+      Đổi vận tốc ban đầu: <i>v<sub>0</sub> = 72 km/h = 20 m/s</i>.<br>
+      Khi xe dừng lại hẳn: <i>v = 0 m/s</i> tại thời điểm <i>t = 10 s</i>.<br><br>
+
+      <strong>a) Gia tốc của ô tô:</strong><br>
+      <i>a = (v - v<sub>0</sub>) / t = (0 - 20) / 10 = -2 m/s<sup>2</sup></i>.<br>
+      (Dấu âm cho biết gia tốc ngược chiều chuyển động, xe chuyển động chậm dần đều).<br><br>
+
+      <strong>b) Vận tốc của xe sau 4 giây hãm phanh:</strong><br>
+      <i>v<sub>4</sub> = v<sub>0</sub> + at = 20 + (-2) &times; 4 = 12 m/s</i> (tương đương 43,2 km/h).<br><br>
+
+      <strong>c) Quãng đường ô tô đi được trong 2 giây cuối cùng:</strong><br>
+      <em>Cách 1:</em> Vận tốc của xe ở thời điểm 2 giây trước khi dừng (tức sau khi phanh được <i>10 - 2 = 8 s</i>):<br>
+      <i>v<sub>8</sub> = v<sub>0</sub> + a &middot; 8 = 20 + (-2) &times; 8 = 4 m/s</i>.<br>
+      Quãng đường đi trong khoảng thời gian <i>&Delta;t = 2 s</i> cuối:<br>
+      <i>s<sub>2s</sub> = v<sub>8</sub> &middot; &Delta;t + 0,5 &middot; a &middot; (&Delta;t)<sup>2</sup> = 4 &times; 2 + 0,5 &times; (-2) &times; 2<sup>2</sup> = 8 - 4 = 4 m</i>.<br><br>
+      <em>Cách 2 (nhanh):</em> Đảo ngược chiều thời gian từ lúc dừng hẳn:<br>
+      <i>s<sub>2s</sub> = 0,5 &middot; |a| &middot; (&Delta;t)<sup>2</sup> = 0,5 &times; 2 &times; 2<sup>2</sup> = 4 m</i>.
+    </div>
+  </div>
+
+</div>
+
+<!-- SCRIPT: INTERACTIVE TESTING & SCORING -->
+<script>
+// Answer Keys
+const KEY_MC = {
+  mc_1: 'B', mc_2: 'A', mc_3: 'C', mc_4: 'C',
+  mc_5: 'B', mc_6: 'B', mc_7: 'A', mc_8: 'B',
+  mc_9: 'B', mc_10: 'B', mc_11: 'B', mc_12: 'B'
+};
+
+const KEY_TF = {
+  tf_1_a: 'T', tf_1_b: 'F', tf_1_c: 'T', tf_1_d: 'F',
+  tf_2_a: 'T', tf_2_b: 'F', tf_2_c: 'T', tf_2_d: 'F'
+};
+
+const KEY_SA = {
+  sa_1: [1, '1', '1.0', '1,0'],
+  sa_2: [8, '8', '8.0', '8,0'],
+  sa_3: [137, '137', '137.5', '137,5'],
+  sa_4: [40, '40', '40.0', '40,0'],
+  sa_5: [1, '1', '1.0', '1,0'],
+  sa_6: [700, '700'],
+  sa_7: [54, '54', '54.0', '54,0'],
+  sa_8: [10, '10', '10.0', '10,0']
+};
+
+// Toggle Solution
+function toggleSol(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.toggle('show');
+  }
+}
+
+let allShown = false;
+function toggleAllSolutions() {
+  allShown = !allShown;
+  const boxes = document.querySelectorAll('.solution-box');
+  boxes.forEach(box => {
+    if (allShown) box.classList.add('show');
+    else box.classList.remove('show');
+  });
+}
+
+// Timer Countdown
+let timeLeft = 45 * 60;
+const timerEl = document.getElementById('timerDisplay');
+const timerInterval = setInterval(() => {
+  if (timeLeft <= 0) {
+    clearInterval(timerInterval);
+    timerEl.innerText = "00:00 (Hết giờ)";
+    alert("Đã hết thời gian 45 phút! Hệ thống sẽ tự động chấm điểm bài làm của bạn.");
+    submitExam();
+    return;
+  }
+  timeLeft--;
+  const mins = Math.floor(timeLeft / 60);
+  const secs = timeLeft % 60;
+  timerEl.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}, 1000);
+
+// Scoring
+function submitExam() {
+  let scorePart1 = 0;
+  let scorePart2 = 0;
+  let scorePart3 = 0;
+
+  // Grade Part I (12 câu - mỗi câu 0.25đ = 3.0đ)
+  for (let i = 1; i <= 12; i++) {
+    const radios = document.getElementsByName('mc_' + i);
+    let chosen = null;
+    radios.forEach(r => {
+      if (r.checked) chosen = r.value;
+      const label = r.closest('.opt-label');
+      label.classList.remove('correct-highlight', 'wrong-highlight');
+      if (r.value === KEY_MC['mc_' + i]) {
+        label.classList.add('correct-highlight');
+      }
+    });
+
+    if (chosen === KEY_MC['mc_' + i]) {
+      scorePart1 += 0.25;
+    } else if (chosen) {
+      radios.forEach(r => {
+        if (r.checked) r.closest('.opt-label').classList.add('wrong-highlight');
+      });
+    }
+  }
+
+  // Grade Part II (2 câu, mỗi câu có 4 ý, chuẩn BGD: 1 ý: 0.1đ; 2 ý: 0.25đ; 3 ý: 0.5đ; 4 ý: 1.0đ)
+  const calcTFQuestion = (prefix) => {
+    let correctCount = 0;
+    ['a', 'b', 'c', 'd'].forEach(sub => {
+      const radios = document.getElementsByName(prefix + '_' + sub);
+      let chosen = null;
+      radios.forEach(r => { if (r.checked) chosen = r.value; });
+      if (chosen === KEY_TF[prefix + '_' + sub]) {
+        correctCount++;
+      }
+    });
+    if (correctCount === 1) return 0.1;
+    if (correctCount === 2) return 0.25;
+    if (correctCount === 3) return 0.5;
+    if (correctCount === 4) return 1.0;
+    return 0;
+  };
+
+  scorePart2 = calcTFQuestion('tf_1') + calcTFQuestion('tf_2');
+
+  // Grade Part III (8 câu - mỗi câu 0.25đ = 2.0đ)
+  for (let i = 1; i <= 8; i++) {
+    const input = document.getElementById('sa_' + i);
+    const val = input.value.trim().replace(',', '.');
+    input.classList.remove('correct-highlight', 'wrong-highlight');
+    
+    const validAnswers = KEY_SA['sa_' + i];
+    const isCorrect = validAnswers.some(ans => Math.abs(parseFloat(val) - parseFloat(ans)) < 0.05);
+
+    if (isCorrect) {
+      scorePart3 += 0.25;
+      input.classList.add('correct-highlight');
+    } else if (val !== '') {
+      input.classList.add('wrong-highlight');
+    }
+  }
+
+  const totalAutoScore = Math.round((scorePart1 + scorePart2 + scorePart3) * 100) / 100;
+
+  // Show score box
+  const scoreBox = document.getElementById('scoreBox');
+  const scoreDetails = document.getElementById('scoreDetails');
+  scoreBox.style.display = 'block';
+  scoreDetails.innerHTML = `
+    <strong>Điểm phần Trắc nghiệm (tự động chấm): ${totalAutoScore} / 7,0 điểm</strong><br>
+    • Phần I (Nhiều lựa chọn): <strong>${scorePart1.toFixed(2)} / 3,0</strong> điểm.<br>
+    • Phần II (Đúng/Sai theo chuẩn thang điểm Bộ): <strong>${scorePart2.toFixed(2)} / 2,0</strong> điểm.<br>
+    • Phần III (Trả lời ngắn): <strong>${scorePart3.toFixed(2)} / 2,0</strong> điểm.<br>
+    • Phần IV (Tự luận): <strong>3,0 điểm</strong> (Bạn hãy đối chiếu các bước giải chi tiết bên dưới để tự chấm điểm).<br>
+    <div style="margin-top: 10px; color: #0369a1; font-weight: 600;">👉 Tất cả hướng dẫn giải chi tiết cho từng câu đã được mở bên dưới để bạn tiện xem lại!</div>
+  `;
+
+  // Auto expand all solutions
+  const boxes = document.querySelectorAll('.solution-box');
+  boxes.forEach(box => box.classList.add('show'));
+
+  // Scroll to score
+  scoreBox.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetExam() {
+  if (confirm("Bạn có chắc chắn muốn làm lại từ đầu không?")) {
+    location.reload();
+  }
+}
+</script>
+
+</body>
+</html>
